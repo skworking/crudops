@@ -10,7 +10,9 @@ const NavList=()=>{
                 <Link href={'/add'}>Add USer</Link>
             </li>
             <li>
-                Display USer
+                <Link href={'/user-list'} className='hover:bg-white'>
+                    Display USer
+                </Link>
             </li>
             </ul>
         </>
