@@ -1,0 +1,70 @@
+
+/* form style for registration page */
+
+.heading{
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  font-size: x-large;
+  margin-top: 10px;
+}
+
+
+.formstyle{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+}
+
+
+.containerdiv{
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.containerdivleft{
+  width: 400px;
+  margin: auto;
+  font-size: 20px;
+}
+
+.containerdivinput{
+  width: 400px;    
+  font-size: larger;
+}
+
+.containerdivright{
+  width: 400px;
+ 
+  margin: auto;
+ 
+  font-size: 20px;
+}
+
+.formbtn{
+  width: 500px;
+  background: rgb(115, 115, 199);
+  padding: 20px;
+  margin: auto;
+  
+}
+
+
+@media(max-width:768px){
+  .containerdivinput{
+    width:auto;    
+    display: flex;
+    font-size: smaller;
+  }
+
+  .formbtn{
+    width: 200px;
+    background: rgb(115, 115, 199);
+    padding: 10px;
+    margin: auto;
+    
+  }
+}
