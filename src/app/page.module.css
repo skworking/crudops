@@ -33,6 +33,7 @@
 
 .containerdivinput{
   width: 400px;    
+  border: 1px solid gray;
   font-size: larger;
 }
 

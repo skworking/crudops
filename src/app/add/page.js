@@ -1,8 +1,9 @@
 "use client"
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "../page.module.css";
 
 const AddUser=()=> {
+  // const formRef=useRef(null)
   const [formData, setFormData] = useState({
     name: '',
     age: '',
@@ -32,15 +33,23 @@ const AddUser=()=> {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log(formData);
-
+    let result=await fetch("http://localhost:3000/api/users",{
+      method:"POST",
+      body:JSON.stringify(formData)
+    });
+    result=await result.json();
+    if(result.success){
+      alert("data inserted successfully");
+   
+    }
   }
   return (
     <main className={styles.main}>
       <h5 className={styles.heading}>User Registration Form</h5>
-      <form className={`${styles.formstyle} `} method="post" onSubmit={(e) => { handleSubmit(e) }}>
+      <form className={`${styles.formstyle} `} method="post"  onSubmit={(e) => { handleSubmit(e) }}>
 
         <div className={styles.containerdiv}>
         

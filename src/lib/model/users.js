@@ -6,7 +6,7 @@ const UserSchema=new mongoose.Schema({
     hobby:{
         name: String,
         slug: String,
-        image: String
+        image: String,
     }
 });
 export const User=mongoose.models.users || mongoose.model("users",UserSchema);

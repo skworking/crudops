@@ -18,25 +18,34 @@ export async function GET(){
 }
 
 
-export async function POST(){
+export async function POST(request){
     await mongoose.connect(con)
-     try{
-        let user=new User({
-            name: "John Doe",
-            age: 30,
-            salary: 50000,
-            hobby: {
-                name: "Reading",
-                slug: "reading",
-                image: "book.jpg"
-            }
-      })
-      user.save().then(() => {
-        console.log("Data inserted successfully");
-    }).catch((error) => {
-        console.error("Error inserting data:", error);
-    });
-    }catch(err){
-        console.log(err);
-    }
+    const payload=await request.json();
+    let user=new User(payload)
+    const result=await user.save();
+    return NextResponse.json({result,success:true})
+    
+    // try{
+    // 
+    //  await mongoose.connect(con)
+    //     let user=new User({
+    //         name: "John Doe",
+    //         age: 30,
+    //         salary: 50000,
+    //         hobby: {
+    //             name: "Reading",
+    //             slug: "reading",
+    //             image: "book.jpg"
+    //         }
+    //   })
+ 
+    //   user.save().then(() => {
+    //     console.log("Data inserted successfully");
+
+    // }).catch((error) => {
+    //     console.error("Error inserting data:", error);
+    // });
+    // }catch(err){
+    //     console.log(err);
+    // }
 }

@@ -16,21 +16,34 @@ export async function GET(){
     return NextResponse.json({result:data,success:true})
 }
 
-export async function POST(){
+export async function POST(request){
     await mongoose.connect(con)
-     try{
-        let user=new Product({
-            name:"satish",
-            price:200,
-            company:"sk",
-            color:"blue-while"
-      })
-      user.save().then(() => {
-        console.log("Data inserted successfully");
-    }).catch((error) => {
-        console.error("Error inserting data:", error);
-    });
-    }catch(err){
-        console.log(err);
-    }
+    const payload=await request.json();
+    let product=new Product(payload)
+    const result=await product.save();
+    return NextResponse.json({result,success:true})
+
+    // try{
+    // const payload=await request.body.json();
+    // console.log("body",payload);
+    // await mongoose.connect(con);
+    // //     let user=new Product({
+    // //         name:"satish",
+    // //         price:200,
+    // //         company:"sk",
+    // //         color:"blue-while"
+    // //   })
+    //     let product=new Product(payload);
+    //  await product.save();
+    //     console.log("Data inserted successfully");
+
+    // }catch(error){
+    //     console.error("Error inserting data:", error);
+    //     return NextResponse.json({ success: false, error: err.message });
+    // }
+    // finally {
+    //     // Close the MongoDB connection
+    //     await mongoose.connection.close();
+    // }
+    // return NextResponse.json({ success: true });
 }
