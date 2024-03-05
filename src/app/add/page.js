@@ -2,11 +2,11 @@
 import { useState } from "react";
 import styles from "../page.module.css";
 import Image from "next/image";
-
+import {useRouter} from 'next/navigation'
 const AddUser=(props)=> {
   const {data,oncancel,onUpdate}=props;
 
-  console.log(data );
+  const router = useRouter()
   const [formData, setFormData] = useState({
     name: data?.name ,
     age:  data?.age,
@@ -70,6 +70,7 @@ const AddUser=(props)=> {
     result=await result.json();
     if(result.success){
       alert("data inserted successfully");
+      router.push('/user-list');
    
     }
   }
@@ -152,7 +153,7 @@ const AddUser=(props)=> {
              <input  className={styles.containerdivinput}
               type="file"
               accept=".png,.jpg"
-              name="img"
+              name="image"
               onChange={handleHobbyImage}
               />
               {formData.hobby.image &&

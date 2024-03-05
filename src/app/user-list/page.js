@@ -1,13 +1,15 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import styles from '../page.module.css'
 import AddUser from '../add/page';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const DisplayUser = () => {
   const [users, setUsers] = useState([]);
   const [show,setShow]=useState(false);
   const [data,setData]=useState()
+
+  const router = useRouter()
 
   const fetchData = async () => {
     try {
@@ -27,8 +29,17 @@ const DisplayUser = () => {
     fetchData();
   }, []);
 
-  const handleDelete=(id)=>{
+  const handleDelete=async(id)=>{
     console.log("select id-",id);
+    let response = await fetch("http://localhost:3000/api/users/"+id,{
+      method:"DELETE"
+    });
+    response=await response.json();
+    if(response.success){
+      alert("Record Deleted Success-full")
+      // router.push('/user-list',{scroll:false})
+      fetchData()
+    }
   }
 
   const [formData, setFormData] = useState({
