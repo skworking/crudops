@@ -1,17 +1,20 @@
 "use client"
-import { useRef, useState } from "react";
+import { useState } from "react";
 import styles from "../page.module.css";
+import Image from "next/image";
 
-const AddUser=()=> {
-  // const formRef=useRef(null)
+const AddUser=(props)=> {
+  const {data,oncancel,onUpdate}=props;
+
+  console.log(data );
   const [formData, setFormData] = useState({
-    name: '',
-    age: '',
-    salary:"",
+    name: data?.name ,
+    age:  data?.age,
+    salary: data?.salary,
     hobby: {
-      name: '',
-      slug: '',
-      img: ''
+      name:  data?.hobby?.name,
+      slug:  data?.hobby?.slug,
+      image: data?.hobby?.image
     }
   });
   const handleChange = (e) => {
@@ -33,11 +36,35 @@ const AddUser=()=> {
     }));
   };
 
+  const handleHobbyImage=(e)=>{
+    const file=e.target.files[0];
+
+    // Create a new FileReader instance
+    const reader = new FileReader();
+
+    reader.onload = () => {
+    // Set the data URL as the value of formData.hobby.image
+    setFormData(prevState => ({
+      ...prevState,
+      hobby: {
+        ...prevState.hobby,
+        // image:file
+        image: reader.result
+      }
+    }));
+   }
+    // Read the file as a data URL
+   reader.readAsDataURL(file);
+  }
+
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(formData);
+    console.log("data",formData);
     let result=await fetch("http://localhost:3000/api/users",{
       method:"POST",
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
       body:JSON.stringify(formData)
     });
     result=await result.json();
@@ -46,10 +73,23 @@ const AddUser=()=> {
    
     }
   }
+
+// edit section op
+  
+  const handleUpdate=(e)=>{
+    e.preventDefault()
+    const _id=data._id;
+    onUpdate(formData,_id)
+  }
+
   return (
     <main className={styles.main}>
+      {data === undefined ?
       <h5 className={styles.heading}>User Registration Form</h5>
-      <form className={`${styles.formstyle} `} method="post"  onSubmit={(e) => { handleSubmit(e) }}>
+      :
+      <h5 className={styles.heading}>Update User Details</h5>
+      }
+      <form className={`${styles.formstyle} `} method="post"  /* onSubmit={(e) => { handleSubmit(e) }} */>
 
         <div className={styles.containerdiv}>
         
@@ -59,7 +99,7 @@ const AddUser=()=> {
               type="text"
               name="name"
               value={formData.name}
-              onChange={handleChange}
+              onChange={handleChange} 
           />
           </label>
         
@@ -107,15 +147,30 @@ const AddUser=()=> {
 
           <label className={styles.containerdivright}>
             Hobby Image URL:
-            <input  className={styles.containerdivinput}
-              type="text"
+                     
+            <div>
+             <input  className={styles.containerdivinput}
+              type="file"
+              accept=".png,.jpg"
               name="img"
-              value={formData.hobby.img}
-              onChange={handleHobbyChange}
-            />
+              onChange={handleHobbyImage}
+              />
+              {formData.hobby.image &&
+              <Image src={formData?.hobby?.image} width={250} height={100} />
+              }
+            </div>
+            
           </label>
         </div>
-        <button className={styles.formbtn} type="submit">Submit</button>
+        { data === undefined ?
+        <button className={styles.formbtn} type="submit" onClick={handleSubmit}>Submit</button>
+        :
+        <div className="flex gap-4 m-auto">  
+
+        <button className={'bg-red-300 sm:w-[200px] p-2 hover:bg-red-500'} onClick={oncancel}>Cancel</button>
+        <button className={'bg-green-300 sm:w-[200px] p-2 hover:bg-green-500'} onClick={handleUpdate}>Update</button>
+        </div>
+        }
       </form>
     </main>
   );
