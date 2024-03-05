@@ -4,6 +4,7 @@ import AddUser from '../add/page';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styles from '../page.module.css'
+import { IoCloseCircleOutline } from "react-icons/io5";
 const DisplayUser = () => {
   const [users, setUsers] = useState([]);
   const [show,setShow]=useState(false);
@@ -89,6 +90,8 @@ const DisplayUser = () => {
     <div className='overflow-x-auto  items-center'>
      {loading ? <div className='w-full  text-center m-auto'>Loading Data</div>
      :
+     <>
+      <h2>User List</h2>
       <table className="w-full bg-white shadow-md rounded-lg ">
         <thead className="bg-gray-200 text-gray-700 flex-1">
           <tr className=''>
@@ -129,10 +132,12 @@ const DisplayUser = () => {
           }
         </tbody>
       </table>
-      }
+     </>
+    }
           {show && 
           <div className='absolute top-0 h-screen w-full p-20 bg-gray-400 opacity-80 text-center'>
-            <div className=' float-right  bg-white w-[30px] h-[30px] text-center  p-1 rounded-full' onClick={()=>{setShow(!show)}} > X</div>
+            <IoCloseCircleOutline className=' float-right  hover:bg-white bg-gray-400 w-[30px] h-[30px] text-center  p-1 rounded-full cursor-pointer' onClick={()=>{setShow(!show)}} />
+              
             <AddUser data={data} oncancel={handleCancel} onUpdate={handleUpdate}/>
            
           </div>
