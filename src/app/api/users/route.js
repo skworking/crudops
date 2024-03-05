@@ -24,7 +24,7 @@ export async function POST(request){
     let user=new User(payload)
     const result=await user.save();
     return NextResponse.json({result,success:true})
-    
+
     // try{
     // 
     //  await mongoose.connect(con)
@@ -49,3 +49,4 @@ export async function POST(request){
     //     console.log(err);
     // }
 }
+
