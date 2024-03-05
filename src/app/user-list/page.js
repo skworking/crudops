@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styles from '../page.module.css'
 import { IoCloseCircleOutline } from "react-icons/io5";
+import { CiSearch } from "react-icons/ci";
 const DisplayUser = () => {
   const [users, setUsers] = useState([]);
   const [show,setShow]=useState(false);
@@ -91,7 +92,13 @@ const DisplayUser = () => {
      {loading ? <div className='w-full  text-center m-auto'>Loading Data</div>
      :
      <>
-      <h2>User List</h2>
+      <div className='flex w-full justify-between  p-2'>
+      <h2 className='w-1/6 bg-red-200'>User List</h2>
+      <div className='flex   items-center border-2 border-emerald-100 p-2 '>
+          <input type='text' placeholder='Search User List ' className='outline-none' />
+          <CiSearch className='flex text-center'/>
+      </div>
+      </div>
       <table className="w-full bg-white shadow-md rounded-lg ">
         <thead className="bg-gray-200 text-gray-700 flex-1">
           <tr className=''>
