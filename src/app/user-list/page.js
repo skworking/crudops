@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import AddUser from '../add/page';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
+import styles from '../page.module.css'
 const DisplayUser = () => {
   const [users, setUsers] = useState([]);
   const [show,setShow]=useState(false);
@@ -78,10 +78,17 @@ const DisplayUser = () => {
     }
     fetchData()
   }
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{
+    setTimeout(()=>{
+      setLoading(false)
+    },1000)
+  },[])
 
   return (
     <div className='overflow-x-auto  items-center'>
-     
+     {loading ? <div className='w-full  text-center m-auto'>Loading Data</div>
+     :
       <table className="w-full bg-white shadow-md rounded-lg ">
         <thead className="bg-gray-200 text-gray-700 flex-1">
           <tr className=''>
@@ -99,8 +106,8 @@ const DisplayUser = () => {
           </tr>
         </thead>
         <tbody className="text-gray-600">
-          {users.map(user => (
-            <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-100">
+          {users.length>0 ? users.map(user => (
+            <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-100 ">
               <td className="py-2 px-4">{user.name}</td>
               <td className="py-2 px-4">{user.age}</td>
               <td className="py-2 px-4">{user.salary}</td>
@@ -111,14 +118,18 @@ const DisplayUser = () => {
                 <Image src={user.hobby.image || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user.hobby.name} className="inline-block " width='50' height={20} />
                 
               </td>
-              <td className="py-2 px-4 sm:flex-1 flex-nowrap  ">
+              <td className={`py-2 px-4 sm:flex-1  ${styles.wrap} `}>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={()=>handleEdit(user)}>Edit</button>
                 <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded " onClick={()=>{handleDelete(user._id)}}>Delete</button>
               </td>
             </tr>
-          ))}
+            
+          )):
+          "Data not Found"
+          }
         </tbody>
       </table>
+      }
           {show && 
           <div className='absolute top-0 h-screen w-full p-20 bg-gray-400 opacity-80 text-center'>
             <div className=' float-right  bg-white w-[30px] h-[30px] text-center  p-1 rounded-full' onClick={()=>{setShow(!show)}} > X</div>

@@ -72,3 +72,9 @@
     
   }
 }
+
+
+/* wrap stop on operation button */
+.wrap{
+  white-space: nowrap;
+}
