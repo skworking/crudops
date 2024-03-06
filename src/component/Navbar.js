@@ -17,6 +17,11 @@ const NavList=()=>{
                     Display USer
                 </Link>
             </li>
+            <li className='hover:bg-white p-2 rounded'>
+                <Link href={'/excel-list'}>
+                    Exel-CSV
+                </Link>
+            </li>
             </ul>
         </>
     )

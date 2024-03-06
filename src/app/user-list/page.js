@@ -10,7 +10,7 @@ const DisplayUser = () => {
   const [users, setUsers] = useState([]);
   const [show,setShow]=useState(false);
   const [data,setData]=useState()
-
+  const [search,setSearch]=useState('')
   const router = useRouter()
 
   const fetchData = async () => {
@@ -87,6 +87,23 @@ const DisplayUser = () => {
     },1000)
   },[])
 
+  const handleSearch=(e)=>{
+    e.preventDefault();
+    const search=e.target.value;
+    setSearch(search)
+  }
+  const searching=async()=>{
+    let result=await fetch(`http://localhost:3000/api/users/?name=${search}`)
+    const data = await result.json();
+    console.log("search-data",data);
+  }
+  const searchCall=()=>{
+    console.log(search);
+   if(search.length >0){
+    searching()
+   }
+  }
+
   return (
     <div className='overflow-x-auto  items-center'>
      {loading ? <div className='w-full  text-center m-auto'>Loading Data</div>
@@ -95,8 +112,8 @@ const DisplayUser = () => {
       <div className='flex w-full justify-between  p-2'>
       <h2 className='w-1/6 bg-red-200'>User List</h2>
       <div className='flex   items-center border-2 border-emerald-100 p-2 '>
-          <input type='text' placeholder='Search User List ' className='outline-none' />
-          <CiSearch className='flex text-center'/>
+          <input type='text' placeholder='Search User List ' name='search' onChange={(e)=>handleSearch(e)} className='outline-none' />
+          <CiSearch className='flex text-center' onClick={searchCall}/>
       </div>
       </div>
       <table className="w-full bg-white shadow-md rounded-lg ">
@@ -115,7 +132,7 @@ const DisplayUser = () => {
             <th className="py-2 px-4 ">Operation</th>
           </tr>
         </thead>
-        <tbody className="text-gray-600">
+        <tbody className="text-gray-600 text-center ">
           {users.length>0 ? users.map(user => (
             <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-100 ">
               <td className="py-2 px-4">{user.name}</td>

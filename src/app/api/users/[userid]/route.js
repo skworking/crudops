@@ -1,3 +1,4 @@
+"use client"
 import { NextResponse } from "next/server";
 import { User } from "@/lib/model/users";
 import mongoose from "mongoose";
@@ -20,11 +21,14 @@ export async function PUT(request,content){
     return NextResponse.json({result,success:true})
 
 }
-
+// search by id
 export async function GET(request,content){
+    
+  
     console.log(content);
     // get id
     const userId=content.params.userid;
+  
     // id object create
     const record={_id:userId}
  
