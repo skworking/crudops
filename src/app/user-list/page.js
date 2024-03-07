@@ -44,17 +44,6 @@ const DisplayUser = () => {
     }
   }
 
-  const [formData, setFormData] = useState({
-    name: '',
-    age: '',
-    salary:"",
-    hobby: {
-      name: '',
-      slug: '',
-      image: ''
-    }
-  });
-
   const handleEdit=(data)=>{
     setData(data)
     setShow(!show)

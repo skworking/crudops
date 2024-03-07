@@ -46,13 +46,16 @@ const ExelList = () => {
           <input type='file' accept='.csv, .xlsx'  onChange={handleFileChange} />
           <FaFileAlt />
         </div> */}
-      <div className='w-full  flex bg-red-200 justify-center p-5 mt-5' >
-        {/* <label htmlFor="filePicker"> */}
-          <h1 className='text-xl '>Upload File</h1>
-          <FaFileAlt className='w-fit text-3xl cursor-pointer hover:fill-slate-400' onClick={() => document.getElementById('filePicker').click()}/>
-          
-        {/* </label> */}
+      <div className='w-full  flex bg-gray-200 justify-around p-5 mt-5' >
+        <div className='flex'>
+
+        <h1 className='text-xl '>Upload File</h1>
+        <FaFileAlt className='w-fit text-3xl cursor-pointer hover:fill-slate-400' onClick={() => document.getElementById('filePicker').click()}/>
+        </div>
         <input type='file' id="filePicker" accept='.csv, .xlsx' style={{ display: 'none' }} onChange={handleFileChange} />
+        {Data.length > 0&&
+        <button className='bg-gray-300 p-2 rounded hover:bg-gray-400'>Save</button>
+        }
       </div>
       </div>
       <div>
