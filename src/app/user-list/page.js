@@ -109,15 +109,17 @@ const DisplayUser = () => {
         <thead className="bg-gray-200 text-gray-700 flex-1">
           <tr className=''>
             <th className="py-2 px-4">Name</th>
-            <th className="py-2 px-4">Salary</th>
-            <th className="py-2 px-4">Age</th>
-            <th className="py-2 px-4 bg-slate-200"> Hobby
+            <th className="py-2 px-4">slug</th>
+            <th className="py-2 px-4">description</th>
+            <th className="py-2 px-4">image</th>
+            <th className="py-2 px-4">Gallery</th>
+            {/* <th className="py-2 px-4 bg-slate-200"> Hobby
              <span className='flex justify-around bg-gray-400'>
               <span className="py-2 px-4">Hobby Name</span>
               <span className="py-2 px-4">Hobby Slug</span>
               <span className="py-2 px-4">Hobby Image</span>
             </span>
-            </th>
+            </th> */}
             <th className="py-2 px-4 ">Operation</th>
           </tr>
         </thead>
@@ -125,13 +127,13 @@ const DisplayUser = () => {
           {users.length>0 ? users.map(user => (
             <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-100 ">
               <td className="py-2 px-4">{user.name}</td>
-              <td className="py-2 px-4">{user.age}</td>
-              <td className="py-2 px-4">{user.salary}</td>
+              <td className="py-2 px-4">{user.slug}</td>
+              <td className="py-2 px-4">{user.description}</td>
               <td className="py-2 px-4 flex justify-around">
-                
+{/*                 
                 <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.name}</span>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.slug}</span>
-                <Image src={user.hobby.image || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user.hobby.name} className="inline-block " width='50' height={20} />
+                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.slug}</span> */}
+                <Image src={user.image.original || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user.name} className="inline-block " width='50' height={20} />
                 
               </td>
               <td className={`py-2 px-4 sm:flex-1  ${styles.wrap} `}>

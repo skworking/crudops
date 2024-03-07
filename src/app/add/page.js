@@ -3,19 +3,26 @@ import { useState } from "react";
 import styles from "../page.module.css";
 import Image from "next/image";
 import {useRouter} from 'next/navigation'
-const AddUser=(props)=> {
-  const {data,oncancel,onUpdate}=props;
+const AddUser=()=> {
+
 
   const router = useRouter()
   const [formData, setFormData] = useState({
-    name: data?.name ,
-    age:  data?.age,
-    salary: data?.salary,
-    hobby: {
-      name:  data?.hobby?.name,
-      slug:  data?.hobby?.slug,
-      image: data?.hobby?.image
-    }
+    name:'',
+    slug:'',
+    description:'',
+    image: {
+      thumbnail:'',
+      original:''
+    },
+    gallery: [
+      {
+      thumbnail : '',
+      original:'',
+      }
+    ]
+
+    
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,33 +32,53 @@ const AddUser=(props)=> {
     }));
   };
 
-  const handleHobbyChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      hobby: {
-        ...prevState.hobby,
-        [name]: value
-      }
-    }));
-  };
+
 
   const handleHobbyImage=(e)=>{
     const file=e.target.files[0];
 
     // Create a new FileReader instance
     const reader = new FileReader();
-
+    // const randomid= Math.floor(Math.random() * 1000000000000);
     reader.onload = () => {
     // Set the data URL as the value of formData.hobby.image
     setFormData(prevState => ({
       ...prevState,
-      hobby: {
-        ...prevState.hobby,
-        // image:file
-        image: reader.result
+   
+      image: {
+        ...prevState.image,
+        // id:randomid,
+        thumbnail: reader.result,
+        original: reader.result
       }
+      
     }));
+  
+   }
+    // Read the file as a data URL
+   reader.readAsDataURL(file);
+  }
+
+  const handleGalleryImage=(e)=>{
+    const file=e.target.files[0];
+
+    // Create a new FileReader instance
+    const reader = new FileReader();
+    // const randomid= Math.floor(Math.random() * 1000000000000);
+    reader.onload = () => {
+    // Set the data URL as the value of formData.hobby.image
+    setFormData(prevState => ({
+      ...prevState,
+   
+      gallery: {
+        ...prevState.gallery,
+        // id:randomid,
+        thumbnail: reader.result,
+        original: reader.result
+      }
+      
+    }));
+  
    }
     // Read the file as a data URL
    reader.readAsDataURL(file);
@@ -75,22 +102,13 @@ const AddUser=(props)=> {
     }
   }
 
-// edit section op
-  
-  const handleUpdate=(e)=>{
-    e.preventDefault()
-    const _id=data._id;
-    onUpdate(formData,_id)
-  }
 
   return (
     <main className={styles.main}>
-      {data === undefined ?
+    
       <h5 className={styles.heading}>User Registration Form</h5>
-      :
-      <h5 className={styles.heading}>Update User Details</h5>
-      }
-      <form className={`${styles.formstyle} `} method="post"  /* onSubmit={(e) => { handleSubmit(e) }} */>
+     
+      <form className={`${styles.formstyle} `} method="post" >
 
         <div className={styles.containerdiv}>
         
@@ -105,49 +123,29 @@ const AddUser=(props)=> {
           </label>
         
           <label className={styles.containerdivright}>
-            Age:
-            <input className={styles.containerdivinput}
-              type="text"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-            />
-          </label>
-        </div>
-        <div className={styles.containerdiv}>
-          <label className={styles.containerdivleft}>
-            Salary:
-            <input className={styles.containerdivinput}
-              type="text"
-              name="salary"
-              value={formData.salary}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label className={styles.containerdivright}>
-            Hobby Name:
-            <input className={styles.containerdivinput}
-              type="text"
-              name="name"
-              value={formData.hobby.name}
-              onChange={handleHobbyChange}
-            />
-          </label>
-        </div>
-        <div className={styles.containerdiv}>
-          <label className={styles.containerdivleft}>
-            Hobby Slug:
+          slug:
             <input className={styles.containerdivinput}
               type="text"
               name="slug"
-              value={formData.hobby.slug}
-              onChange={handleHobbyChange}
+              value={formData.slug}
+              onChange={handleChange}
             />
           </label>
-
+          <label className={styles.containerdivleft}>
+          description:
+            <input className={styles.containerdivinput}
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+       
+        <div className={styles.containerdiv}>
+       
           <label className={styles.containerdivright}>
-            Hobby Image URL:
+           Image URL:
                      
             <div>
              <input  className={styles.containerdivinput}
@@ -156,22 +154,38 @@ const AddUser=(props)=> {
               name="image"
               onChange={handleHobbyImage}
               />
-              {formData.hobby.image &&
-              <Image src={formData?.hobby?.image} width={250} height={100} />
+              {formData.image &&
+              <Image src={formData?.image?.original } width={250} height={100} />
+              }
+            </div>
+            
+          </label>
+
+          <label className={styles.containerdivright}>
+           Image Gallery:
+                     
+            <div>
+             <input  className={styles.containerdivinput}
+              type="file"
+              accept=".png,.jpg"
+              name="image"
+              onChange={handleGalleryImage}
+              multiple
+             />
+
+              {formData.gallery.length >0 &&
+                formData.gallery.map((item)=>{
+                  <Image src={formData?.gallery?.original } width={250} height={100} />
+                })
+              // <Image src={formData?.gallery?.original } width={250} height={100} />
               }
             </div>
             
           </label>
         </div>
-        { data === undefined ?
+      
         <button className={styles.formbtn} type="submit" onClick={handleSubmit}>Submit</button>
-        :
-        <div className="flex gap-4 m-auto">  
-
-        <button className={'bg-red-300 sm:w-[200px] p-2 hover:bg-red-500'} onClick={oncancel}>Cancel</button>
-        <button className={'bg-green-300 sm:w-[200px] p-2 hover:bg-green-500'} onClick={handleUpdate}>Update</button>
-        </div>
-        }
+       
       </form>
     </main>
   );
