@@ -12,7 +12,7 @@ const DisplayUser = () => {
   const [data,setData]=useState()
   const [search,setSearch]=useState('')
   const router = useRouter()
-
+  console.log(users);
   const fetchData = async () => {
     try {
       const result = await fetch("http://localhost:3000/api/users");
@@ -133,8 +133,22 @@ const DisplayUser = () => {
 {/*                 
                 <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.name}</span>
                 <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.slug}</span> */}
-                <Image src={user.image.original || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user.name} className="inline-block " width='50' height={20} />
+                <Image src={user?.image?.original || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user?.name} className="inline-block " width='50' height={20} />
                 
+              </td>
+              <td className="py-2 px-4 ">
+                {/* {JSON.stringify(user.gallery.original)}
+
+                {user.gallery.thumbnail} */}
+                {user?.gallery.length >= 0 &&
+                  user?.gallery.map((list)=>{ return(
+                    <div key={list?._id}>
+
+                    <Image src={list.original} alt={user?.name} className="inline-block " width='50' height={20} />
+                    </div>
+                    )
+                  })
+                }
               </td>
               <td className={`py-2 px-4 sm:flex-1  ${styles.wrap} `}>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={()=>handleEdit(user)}>Edit</button>

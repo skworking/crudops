@@ -21,6 +21,7 @@ export async function GET(){
 export async function POST(request){
     await mongoose.connect(con)
     const payload=await request.json();
+    console.log("payload",payload);
     let user=new User(payload)
     const result=await user.save();
     return NextResponse.json({result,success:true})
