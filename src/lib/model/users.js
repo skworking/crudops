@@ -15,14 +15,18 @@ const optionSchema=new mongoose.Schema({
     name:String,
     value:String
 })
-const valuesSchema=new mongoose.Schema({
-    attribute_id:Number,
-    value:String
-})
+// const valuesSchema=new mongoose.Schema({
+//     attribute_id:Number,
+//     value:String
+// })
 const attributeSchema=new mongoose.Schema({
     slug:String,
     name:String,
-    values:[valuesSchema]  
+    // values:[valuesSchema]
+    values:[{
+        attribute_id:Number,
+        value:String
+    }]  
 })
 const variationSchema=new mongoose.Schema({
     attribute_id:Number,
