@@ -11,6 +11,34 @@ const TagSchema=new mongoose.Schema({
     name:String,
     slug:String,
 });
+const optionSchema=new mongoose.Schema({
+    name:String,
+    value:String
+})
+const variationSchema=new mongoose.Schema({
+    attribute_id:Number,
+    value:String,
+    attribute:{attributeSchema}
+
+})
+const attributeSchema=new mongoose.Schema({
+    slug:String,
+    name:String,
+    values:[valuesSchema]  
+})
+const valuesSchema=new mongoose.Schema({
+    attribute_id:Number,
+    value:String
+})
+const variationOptionSchema=new mongoose.Schema({
+   title:String,
+   price:Number,
+   sale_price:String,
+   quantity:Number,
+   is_disable:Number,
+   sku:String,
+   options:[optionSchema]
+})
 const UserSchema=new mongoose.Schema({
    
     name:String,
@@ -27,6 +55,9 @@ const UserSchema=new mongoose.Schema({
     product_type:String,
     max_price:Number,
     min_price:Number,
+    variations:[variationSchema],
+    variation_options:[variationOptionSchema],
+
 
 });
 export const User=mongoose.models.users || mongoose.model("users",UserSchema);
