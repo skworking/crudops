@@ -15,21 +15,23 @@ const optionSchema=new mongoose.Schema({
     name:String,
     value:String
 })
-const variationSchema=new mongoose.Schema({
+const valuesSchema=new mongoose.Schema({
     attribute_id:Number,
-    value:String,
-    attribute:{attributeSchema}
-
+    value:String
 })
 const attributeSchema=new mongoose.Schema({
     slug:String,
     name:String,
     values:[valuesSchema]  
 })
-const valuesSchema=new mongoose.Schema({
+const variationSchema=new mongoose.Schema({
     attribute_id:Number,
-    value:String
+    value:String,
+    attribute:attributeSchema
+
 })
+
+
 const variationOptionSchema=new mongoose.Schema({
    title:String,
    price:Number,
