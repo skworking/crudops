@@ -16,11 +16,7 @@ const EditUser=(props)=> {
       original: data?.image?.original || ''
     },
     description:data?.description,
-    // hobby: {
-    //   name:  data?.hobby?.name,
-    //   slug:  data?.hobby?.slug,
-     
-    // }
+  
   });
   const handleChange = (e) => {
     const { name, value } = e.target;

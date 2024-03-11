@@ -68,7 +68,7 @@ const AddUser = () => {
       [name]: parsedValue // Store parsed value
     }));
   };
-  console.log(formData);
+  // console.log("select",selectedOptions);
 
   const handleHobbyImage = (e) => {
     e.preventDefault();
@@ -203,7 +203,7 @@ const AddUser = () => {
   }
 
   const handleSelectAttribute = (selectedOption, index) => {
-    console.log(selectedOption);
+   
     const attributeOptions = selectedOption.map(option => ({
       attribute_id: option?.id, // Assuming label corresponds to the name property in options
       value: option?.value
@@ -451,7 +451,7 @@ const AddUser = () => {
             />
           </label>
           <label className={styles.containerdivright}>
-            Image URL:
+           
             <input className={styles.containerdivinput}
               type="file"
               accept=".png,.jpg"
@@ -460,7 +460,7 @@ const AddUser = () => {
             />
 
             <div className="flex p-2 gap-2 ">
-              {formData.image && formData.image !== '' &&
+              {formData.image !== '' &&
 
                 <Image src={formData?.image?.original} width={100} height={100} />
               }
@@ -658,7 +658,6 @@ const AddUser = () => {
                   <Select
                     isMulti={true}
                     value={option.name}
-                    // onChange={handleSelectoption}
                     onChange={(selectedOption) => handleSelectoption(selectedOption, index)}
                     placeholder=" Select Options"
                     options={tags}

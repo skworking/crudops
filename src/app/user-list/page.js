@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation';
 import styles from '../page.module.css'
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
+import EditUser from '../component/edituser/page';
+import Editdetails from '../add/editdetails';
+
 const DisplayUser = () => {
   const [users, setUsers] = useState([]);
   const [show,setShow]=useState(false);
@@ -13,6 +16,7 @@ const DisplayUser = () => {
   const [search,setSearch]=useState('')
   const router = useRouter()
   console.log(users);
+
   const fetchData = async () => {
     try {
       const result = await fetch("http://localhost:3000/api/users");
@@ -112,7 +116,7 @@ const DisplayUser = () => {
             <th className="py-2 px-4">slug</th>
             <th className="py-2 px-4">description</th>
             <th className="py-2 px-4">image</th>
-            <th className="py-2 px-4">Gallery</th>
+            {/* <th className="py-2 px-4">Gallery</th> */}
             {/* <th className="py-2 px-4 bg-slate-200"> Hobby
              <span className='flex justify-around bg-gray-400'>
               <span className="py-2 px-4">Hobby Name</span>
@@ -136,10 +140,8 @@ const DisplayUser = () => {
                 <Image src={user?.image?.original || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user?.name} className="inline-block " width='50' height={20} />
                 
               </td>
-              <td className="py-2 px-4 ">
-                {/* {JSON.stringify(user.gallery.original)}
-
-                {user.gallery.thumbnail} */}
+              {/* <td className="py-2 px-4 ">
+                        
                 {user?.gallery.length >= 0 &&
                   user?.gallery.map((list)=>{ return(
                     <div key={list?._id}>
@@ -149,7 +151,7 @@ const DisplayUser = () => {
                     )
                   })
                 }
-              </td>
+              </td> */}
               <td className={`py-2 px-4 sm:flex-1  ${styles.wrap} `}>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={()=>handleEdit(user)}>Edit</button>
                 <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded " onClick={()=>{handleDelete(user._id)}}>Delete</button>
@@ -164,10 +166,10 @@ const DisplayUser = () => {
      </>
     }
           {show && 
-          <div className='absolute top-0 h-screen w-full p-20 bg-gray-400 opacity-80 text-center'>
+          <div className='absolute top-0 h-auto w-full p-20 bg-gray-400 opacity-80 text-center'>
             <IoCloseCircleOutline className=' float-right  hover:bg-white bg-gray-400 w-[30px] h-[30px] text-center  p-1 rounded-full cursor-pointer' onClick={()=>{setShow(!show)}} />
               
-            <AddUser data={data} oncancel={handleCancel} onUpdate={handleUpdate}/>
+            <Editdetails data={data} oncancel={handleCancel} onUpdate={handleUpdate}/>
            
           </div>
           }

@@ -61,7 +61,7 @@ const ExelList = () => {
       <div>
         {Data?.length > 0 && (
           <>
-          <h1 className='bg-gray-400 p-2 text-base'>User List</h1>
+          <h1 className='bg-gray-400  p-2 text-base'>User List</h1>
           <table className="w-full bg-white shadow-md rounded-lg "  >
             <thead className="bg-gray-200 text-gray-700 flex-1">
               <tr className="py-2 px-4">
