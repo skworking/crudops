@@ -160,22 +160,7 @@ const AddUser = () => {
     { value: '36oz', label: '36oz', id: "3" },
 
   ]
-  // let selectedTags = [];
-  //   const handleTagSelection = (event) => {
-  //     const options = event.target.options;
 
-  //     for (let i = 0; i < options.length; i++) {
-  //         if (options[i].selected) {
-  //             selectedTags.push(tags.find(tag => tag.name === options[i].value));
-  //         }
-  //     }
-
-
-  //     setFormData(prevFormData => ({
-  //       ...prevFormData,
-  //       tag: selectedTags
-  //     }));
-  // };
   const [model, setModel] = useState(false)
 
   const handleSelect = (selectedOption) => {
@@ -199,18 +184,7 @@ const AddUser = () => {
       name: option.label, // Assuming label corresponds to the name property in options
       value: option.value
     }));
-    // setSelectedOptionsOption(selectedOption)
-    // setFormData(prevFormData => ({
 
-    //   ...prevFormData,
-    //   variation_options: [
-    //     {
-    //       ...prevFormData.variation_options[0],
-    //       options: updatedOptions
-
-    //     }
-    //   ]
-    // }));
 
     setFormData(prevState => {
       const updatedVariationOptions = [...prevState.variation_options];
@@ -318,14 +292,14 @@ const AddUser = () => {
     setView(!view)
   }
 
-  const handleAddVariation=(e)=>{
+  const handleAddVariation = (e) => {
     e.preventDefault()
     setFormData({
       ...formData,
-      variations:[
+      variations: [
         ...formData.variations,
         {
-          attribute_id:'',
+          attribute_id: '',
           value: '',
           attribute: {
             slug: '',
@@ -350,8 +324,38 @@ const AddUser = () => {
           quantity: '',
           is_disable: '',
           sku: '',
+          options: []
         },
       ],
+    });
+  };
+
+  const removeFormFields = (index) => {
+    console.log(index);
+    let newvariations;
+    if (formData.variations.length > 1) {
+      newvariations = formData.variations.filter((_, i) => i !== index)
+    } else {
+      newvariations = formData.variations;
+    }
+    setFormData({
+      ...formData,
+      variations: newvariations
+    });
+  }
+
+  const handleRemoveVariationOption = (index) => {
+    let newVariationOptions;
+    if (formData.variation_options.length > 1) {
+      newVariationOptions = formData.variation_options.filter((_, i) => i !== index)
+    } else {
+      newVariationOptions = formData.variation_options;
+    }
+
+    setFormData({
+      ...formData,
+      variation_options: newVariationOptions
+
     });
   };
 
@@ -446,10 +450,6 @@ const AddUser = () => {
               onChange={handleNumberChange}
             />
           </label>
-        </div>
-
-        <div className={styles.containerdiv}>
-
           <label className={styles.containerdivright}>
             Image URL:
             <input className={styles.containerdivinput}
@@ -468,6 +468,7 @@ const AddUser = () => {
 
           </label>
 
+          
           <label className={styles.containerdivright}>
             Select Multiple Image Gallery:
             <input className={styles.containerdivinput}
@@ -479,7 +480,7 @@ const AddUser = () => {
               multiple
             />
             <div className="flex p-2 gap-2  ">
-           
+
               {formData.gallery.length > 0 &&
                 formData.gallery.map((item) => {
                   console.log(item);
@@ -497,18 +498,15 @@ const AddUser = () => {
           </label>
           <section className={styles.containerdivright}>
 
-            <Select
-              isMulti={true}
-              value={selectedOptions}
-              onChange={handleSelect}
-              placeholder="Selected Tags"
-              options={options}
+          <Select
+            isMulti={true}
+            value={selectedOptions}
+            onChange={handleSelect}
+            placeholder="Selected Tags"
+            options={options}
 
-            />
+          />
           </section>
-        </div>
-        <div className={styles.containerdiv}>
-
           <label className={styles.containerdivright}>
             max_price:
             <input className={styles.containerdivinput}
@@ -518,28 +516,176 @@ const AddUser = () => {
               onChange={handleNumberChange}
             />
           </label>
-          <label className={styles.containerdivright} onClick={handleShow}>
-            <button className={styles.containerdivinput}>
-              Add Variation
-            </button>
 
-
-          </label>
-          <label className={styles.containerdivright} onClick={handlemodel}>
-            <button className={styles.containerdivinput}>
-
-              Add Variation_option
-            </button>
-
-
-          </label>
         </div>
 
+       
+        <div>
+          {formData.variations.map((option, index) => (
+            <form className="mt-10">
+              <h1 className="text-lg text-center text-black ">Variations Form </h1>
+              <div className={styles.containerdiv}>
+                <label className={styles.containerdivright}>
+                  attribute_id:
+                  <input className={styles.containerdivinput}
+                    type="text"
+                    name="attribute_id"
+                    value={option?.attribute_id}
+                    onChange={(e) => { handleVariationChange(e, index) }}
+                  />
+                </label>
+                <label className={styles.containerdivright}>
+                  value:
+                  <input className={styles.containerdivinput}
+                    type="text"
+                    name="value"
+                    value={option?.value}
+                    onChange={(e) => { handleVariationChange(e, index) }}
+                  />
+                </label>
+                <label className={styles.containerdivright}>
+                  slug:
+                  <input className={styles.containerdivinput}
+                    type="text"
+                    name="slug"
+                    value={option?.attribute?.slug}
+                    onChange={(e) => { handleVariationAttributeChange(e, index) }}
+                  />
+                </label>
+              </div>
+              <div className={styles.containerdiv}>
+                <label className={styles.containerdivright}>
+                  name:
+                  <input className={styles.containerdivinput}
+                    type="text"
+                    name="name"
+                    value={option?.attribute?.name}
+                    onChange={(e) => { handleVariationAttributeChange(e, index) }}
+                  />
+                </label>
+                <label className={styles.containerdivright}>
+                  <Select
+                    isMulti={true}
+                    value={option?.attribute?.values?.name}
+                    onChange={(selectedOptions) => handleSelectAttribute(selectedOptions, index)}
+                    placeholder="Selected Attribute"
+                    options={attributetab}
+                  />
+                </label>
+              </div>
+              <div className="flex w-full justify-around p-10">
+
+                <button onClick={handleAddVariation} className="w-1/6 ml-10 bg-gray-300 ">Add More</button>
+
+                <button onClick={() => removeFormFields(index)}
+                  className={`w-1/6 p-2 ml-10 bg-gray-300 ${formData.variations.length > 1 ? 'bg-red-500 opacity-100 text-bold' : ' opacity-50 bg-red-500 cursor-not-allowed'}`}
+                  disabled={formData.variations.length <= 1}
+                >
+                  Remove
+                </button>
+              </div>
+            </form>
+          ))}
+        </div>
+
+        <div>
+          <h1 className="text-lg text-center  ">Variation_Options Form </h1>
+
+          {/* {JSON.stringify(formData.variation_options.length)} */}
+          {formData.variation_options.map((option, index) => (
+            <div key={index}>
+              <div className={styles.containerdiv}>
+
+                <label className={styles.containerdivright}>
+                  title:
+                  <input className={styles.containerdivinput}
+                    type="text"
+                    name="title"
+                    value={option.title}
+                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                  />
+                </label>
+                <label className={styles.containerdivright}>
+                  price:
+                  <input className={styles.containerdivinput}
+                    type="number"
+                    name="price"
+                    value={option.price}
+                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                  />
+                </label>
+                <label className={styles.containerdivright}>
+                  sale_price:
+                  <input className={styles.containerdivinput}
+                    type="text"
+                    name="sale_price"
+                    value={option.sale_price}
+                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                  />
+                </label>
+              </div>
+              <div className={styles.containerdiv}>
+
+                <label className={styles.containerdivright}>
+                  quantity:
+                  <input className={styles.containerdivinput}
+                    type="text"
+                    name="quantity"
+                    value={option.quantity}
+                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                  />
+                </label>
+
+                <label className={styles.containerdivright}>
+                  is_disable:
+                  <input className={styles.containerdivinput}
+                    type="number"
+                    name="is_disable"
+                    value={option.is_disable}
+                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                  />
+                </label>
+                <label className={styles.containerdivright}>
+                  sku:
+                  <input className={styles.containerdivinput}
+                    type="number"
+                    name="sku"
+                    value={option.sku}
+                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                  />
+                </label>
+                <label className={styles.containerdivright}>
+                  <Select
+                    isMulti={true}
+                    value={option.name}
+                    // onChange={handleSelectoption}
+                    onChange={(selectedOption) => handleSelectoption(selectedOption, index)}
+                    placeholder=" Select Options"
+                    options={tags}
+
+                  />
+                </label>
+              </div>
+
+              <div className="flex w-full justify-around p-10">
+                <button onClick={handleAddVariationOption} className="w-1/6 ml-10 p-2 bg-gray-300 ">Add More</button>
+
+                <button onClick={() => handleRemoveVariationOption(index)}
+                  className={`w-1/6 p-2 ml-10 bg-gray-300 ${formData.variation_options.length > 1 ? 'bg-red-500 opacity-100 text-bold' : ' opacity-50 bg-red-500 cursor-not-allowed'}`}
+                  disabled={formData.variation_options.length <= 1}
+                >
+                  Remove
+                </button>
+              </div>
+
+            </div>
+          ))}
+        </div>
 
         <button className={styles.formbtn} type="submit" onClick={handleSubmit}>Submit</button>
 
       </form>
-      {
+      {/* {
         view && <>
           <div className="bg-red-400 absolute h-screen w-full top-12 ">
             <button onClick={handleShow} className="absolute top-10 right-5 bg-gray-400 p-2 rounded-full w-10 h-10">
@@ -600,14 +746,20 @@ const AddUser = () => {
                 <div className={styles.containerdiv}>
                   <button onClick={handleAddVariation} className="w-1/6 ml-10 bg-gray-300 ">Add More</button>
                 </div>
-
+                <button onClick={()=>removeFormFields(index)}
+                  className={`w-1/6 p-2 ml-10 bg-gray-300 ${formData.variations.length > 1 ?'bg-red-500 opacity-100 text-bold':' opacity-50 bg-red-500 cursor-not-allowed'}`}
+                  disabled={formData.variations.length <= 1}
+                >
+                  Remove
+                </button>
+            
               </form>
             ))}
           </div>
         </>
-      }
+      } */}
 
-      {model && <div className="bg-red-400 absolute h-screen w-full top-12 ">
+      {/* {model && <div className="bg-red-400 absolute h-screen w-full top-12 ">
         <button onClick={handlemodel} className="absolute top-10 right-5 bg-gray-400 p-2 rounded-full w-10 h-10">
           X
         </button>
@@ -692,10 +844,15 @@ const AddUser = () => {
             <div className={styles.containerdiv}>
               <button onClick={handleAddVariationOption} className="w-1/6 ml-10 bg-gray-300 ">Add More</button>
             </div>
+
+            <div>
+              <button onClick={()=>handleRemoveVariationOption(index)} className="w-1/6 ml-10 bg-gray-300 ">Remove</button>
+            </div>
+
           </div>
         ))}
       </div>
-      }
+      } */}
 
 
 
