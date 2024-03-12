@@ -270,7 +270,6 @@ const AddUser = () => {
       ...prevState,
       variations: prevState.variations.map((item, i) => {
         if (i === index) {
-
           return {
             ...item,
             attribute: {
@@ -279,6 +278,7 @@ const AddUser = () => {
             }
           };
         }
+        return item;
       })
     }))
   }
@@ -310,7 +310,7 @@ const AddUser = () => {
       ]
     })
   }
-
+  console.log(formData);
   const handleAddVariationOption = (e) => {
     e.preventDefault()
     setFormData({
@@ -522,7 +522,8 @@ const AddUser = () => {
        
         <div>
           {formData.variations.map((option, index) => (
-            <form className="mt-10">
+            <form className="mt-10" key={index}>
+              {option?.attribute.name}
               <h1 className="text-lg text-center text-black ">Variations Form </h1>
               <div className={styles.containerdiv}>
                 <label className={styles.containerdivright}>
