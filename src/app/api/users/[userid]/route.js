@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import { con } from "@/lib/db";
 
 
+
+
 export async function PUT(request,content){
     console.log(content);
     // get id
@@ -22,13 +24,13 @@ export async function PUT(request,content){
 
 }
 // search by id
-export async function GET(request,content){
+export async function GET(content){
     
   
     console.log(content);
     // get id
     const userId=content.params.userid;
-  
+    console.log(userId);
     // id object create
     const record={_id:userId}
  

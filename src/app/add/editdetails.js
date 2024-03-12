@@ -1,32 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useMemo } from 'react'
 import styles from "../page.module.css";
 import Image from 'next/image';
 import { IoIosCloseCircle } from 'react-icons/io';
 import Select from 'react-select'
 const Editdetails = (props) => {
     const {data,oncancel,onUpdate}=props;
-    console.log(data);
+    const [formData, setFormData] = useState({
+      // id:data._id,
+      name: data?.name ,
+      slug:  data?.slug,
+      description:data?.description,
+      image: {
+        thumbnail: data?.image?.thumbnail || '',
+        original: data?.image?.original || ''
+      },
+      gallery:data.gallery,
+      tag:data.tag,
+      quantity:data.quantity,
+      price:data.price,
+      sale_price:data.sale_price,
+      brand:data.brand,
+      weight:data.weight,
+      min_price:data.min_price,
+      max_price:data.max_price,
+      variations:data.variations,
+      variation_options:data.variation_options       
+    });
+    
     const [selectedOptions, setSelectedOptions] = useState([]|data.tag);
     const [selectedOptionsAttribute, setSelectedOptionsAttribute] = useState([] );
-    
-    // const selectedOptionsatt = data?.variations?.flatMap(variation =>
-    //   variation.attribute.values.map(value => ({
-    //       value: value.attribute_id,
-    //       label: variation.value
-    //     }))
-    //   );
-       console.log(selectedOptionsAttribute);
-    useEffect(()=>{
-        setSelectedOptions(data.tag.map((tag=>({value:tag.name,label:tag.slug}))))
-        // setSelectedOptionsAttribute(data?.variations?.attribute.values?.map((item=>  item)))
-        setSelectedOptionsAttribute(data?.variations?.flatMap(variation =>
-          variation?.attribute?.values?.map(value => ({
-              value: value.attribute_id,
-              label: variation.value
-            }))
-          ))
-    },[data?.tag])
-
+    const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
+  
+    const handleUpdate=(e)=>{
+      e.preventDefault()
+      const _id=data._id;
+      onUpdate(formData,_id)
+    }
+  
     /// this value add manualy now thake come from redux latter
     const options = [
         { value: 'chocolate', label: 'Chocolate' },
@@ -49,28 +59,16 @@ const Editdetails = (props) => {
       ];
     
 
-    const [formData, setFormData] = useState({
-        id:data._id,
-        name: data?.name ,
-        slug:  data?.slug,
-        description:data?.description,
-        image: {
-          thumbnail: data?.image?.thumbnail || '',
-          original: data?.image?.original || ''
-        },
-        gallery:data.gallery,
-        tag:data.tag,
-        quantity:data.quantity,
-        price:data.price,
-        sale_price:data.sale_price,
-        brand:data.brand,
-        weight:data.weight,
-        min_price:data.min_price,
-        max_price:data.max_price,
-        variations:data.variations,
-        variation_options:data.variation_options       
-      });
+   
 
+      useEffect(()=>{
+        setSelectedOptions(data.tag.map((tag=>({value:tag.name,label:tag.slug}))))
+        // setSelectedOptionsAttribute(updatedVariations);
+        setSelectedOptionsAttribute(formData.variations.map((item)=> item.attribute))
+        setSelectedOptionIndex(formData.variation_options.map((item)=> item.options))
+      },[data?.tag,formData.variation_options])
+  
+console.log("attribute",selectedOptionsAttribute);
       const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -111,6 +109,7 @@ const Editdetails = (props) => {
         // Read the file as a data URL
         reader.readAsDataURL(file);
       }
+
       const handleGalleryImage = (e) => {
 
         const files = e.target.files;
@@ -310,9 +309,33 @@ const Editdetails = (props) => {
           })
         }));
       };
+
+      const handleSelectoption = (selectedOption, index) => {
+      
+        const updatedOptions = selectedOption.map(option => ({
+          name: option.label, // Assuming label corresponds to the name property in options
+          value: option.value
+        }));
+    
+        
+        setFormData(prevState => {
+          const updatedVariationOptions = [...prevState.variation_options];
+          console.log("updated", updatedVariationOptions);
+          updatedVariationOptions[index] = {
+            ...updatedVariationOptions[index],
+            options: updatedOptions
+          };
+    
+          return {
+            ...prevState,
+            variation_options: updatedVariationOptions
+          };
+        });
+    
+      }
     return (
     <div>
-        <h1 className={styles.heading}>Record Details Edit({formData.id})</h1>
+        <h1 className={styles.heading}>Record Details Edit({data?._id})</h1>
         
         <div className=''>
          
@@ -516,7 +539,10 @@ const Editdetails = (props) => {
                 <label className={styles.containerdivright}>
                   <Select
                     isMulti={true}
-                    value={selectedOptionsAttribute}
+                    // value={selectedOptionsAttribute}
+                    value={selectedOptionsAttribute[index]?.values?.map((val)=>(
+                      {value:val.value,label:val.value}
+                    ))}
                     onChange={(selectedOptions) => handleSelectAttribute(selectedOptions, index)}
                     placeholder="Selected Attribute"
                     options={attributetab}
@@ -604,10 +630,19 @@ const Editdetails = (props) => {
                     onChange={(e) => { handleVariationOptionChange(index, e) }}
                   />
                 </label>
+                {/* {selectedOptionIndex[index] && selectedOptionIndex[index].map((item,i)=> { 
+                  return(
+                 <div key={i}> {item?.name} </div>
+                )})} */}
                 <label className={styles.containerdivright}>
                   <Select
                     isMulti={true}
-                    value={option.name}
+                    
+                    value={selectedOptionIndex[index]?.map((options, ind) => (
+                      {value: options.value, label: options.name}
+                      // options[index] && { value: options.value, label: options.name }
+                    ))}
+                    // value={option.name}
                     onChange={(selectedOption) => handleSelectoption(selectedOption, index)}
                     placeholder=" Select Options"
                     options={tags}
@@ -626,10 +661,15 @@ const Editdetails = (props) => {
                   Remove
                 </button>
               </div>
-
+                
+           
             </div>
           ))}
         </div>
+         <div className="flex gap-4 justify-center  items-center">  
+         <button className={'bg-red-300 sm:w-[200px] p-2 hover:bg-red-500'} onClick={oncancel}>Cancel</button>
+              <button className={'bg-green-300 sm:w-[200px] p-2 hover:bg-green-500'} onClick={handleUpdate}>Update</button>
+            </div>
         </div>
     </div>
   )

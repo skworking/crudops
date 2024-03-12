@@ -59,10 +59,13 @@ const DisplayUser = () => {
       setShow(!show)
   }
   const handleUpdate=async(data,id)=>{
-    // console.log(data,id);
+    console.log(data,id);
     // alert(id)
     let result=await fetch(`http://localhost:3000/api/users/${id}`,{
       method:"PUT",
+      headers:{
+        "Content-Type": "application/json"
+      },
       body:JSON.stringify(data)
     })
     result=await result.json();
@@ -71,7 +74,7 @@ const DisplayUser = () => {
       alert("Record Updated Succes-full");
       setShow(!show)
     }
-    fetchData()
+    // fetchData()
   }
   const [loading,setLoading]=useState(true);
   useEffect(()=>{
