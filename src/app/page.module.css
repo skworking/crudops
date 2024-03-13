@@ -48,6 +48,7 @@
   font-size: 20px;
 }
 
+
 .formbtn{
   width: 500px;
   background: rgb(115, 115, 199);
@@ -59,7 +60,7 @@
 
 @media(max-width:768px){
   .containerdivinput{
-    width:auto;    
+    width:100% !important;    
     display: flex;
     font-size: smaller;
   }

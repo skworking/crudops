@@ -338,7 +338,8 @@ const Editdetails = (props) => {
     
         const { name, value } = e.target;
         console.log(name, value, index);
-        const parsedValue = parseFloat(value);
+        // const parsedValue = parseFloat(value);
+        const newValue = !isNaN(value) && value !== '' ? parseFloat(value) : 0;
         setFormData(prevState => ({
           ...prevState,
           variation_options: prevState.variation_options.map((option, i) => {
@@ -346,7 +347,7 @@ const Editdetails = (props) => {
     
               return {
                 ...option,
-                [name]: parsedValue
+                [name]: newValue
               };
             }
             return option;
@@ -377,6 +378,25 @@ const Editdetails = (props) => {
         });
     
       }
+
+      const handleVariationOptionBoolean=(index,e)=>{
+        e.preventDefault();
+        const { name   } = e.target;
+      
+        setFormData(prevState => ({
+          ...prevState,
+          variation_options: prevState.variation_options.map((option, i) => {
+            if (i === index) {
+      
+              return {
+                ...option,
+                [name]: !option.is_disable
+              };
+            }
+            return option;
+          })
+        }));
+       }
     return (
     <div>
         <h1 className={styles.heading}>Record Details Edit({data?._id})</h1>
@@ -395,7 +415,7 @@ const Editdetails = (props) => {
             />
           </label>
           <label className={styles.containerdivright}>
-            slug:
+            Slug:
             <input className={styles.containerdivinput}
               type="text"
               name="slug"
@@ -404,7 +424,7 @@ const Editdetails = (props) => {
             />
           </label>
           <label className={styles.containerdivleft}>
-            description:
+            Description:
             <input className={styles.containerdivinput}
               type="text"
               name="description"
@@ -422,7 +442,7 @@ const Editdetails = (props) => {
             />
           </label>
           <label className={styles.containerdivright}>
-            price:
+            Price:
             <input className={styles.containerdivinput}
               type="text"
               name="price"
@@ -431,7 +451,7 @@ const Editdetails = (props) => {
             />
           </label>
           <label className={styles.containerdivright}>
-            sale_price:
+            Sale Price:
             <input className={styles.containerdivinput}
               type="text"
               name="sale_price"
@@ -440,7 +460,7 @@ const Editdetails = (props) => {
             />
           </label>
           <label className={styles.containerdivright}>
-            brand:
+            Brand:
             <input className={styles.containerdivinput}
               type="text"
               name="brand"
@@ -449,7 +469,7 @@ const Editdetails = (props) => {
             />
           </label>
           <label className={styles.containerdivright}>
-            weight:
+            Weight:
             <input className={styles.containerdivinput}
               type="text"
               name="weight"
@@ -457,9 +477,9 @@ const Editdetails = (props) => {
               onChange={handleChange}
             />
           </label>
-          <label className={styles.containerdivright}>
-
-            <input className={`${styles.containerdivinput} `}
+          <section className={styles.containerdivright}>
+            Select Image:
+            <input className={`${styles.containerdivinput} cursor-pointer`}
               type="file"
               
               accept=".png,.jpg"
@@ -470,14 +490,13 @@ const Editdetails = (props) => {
 
             <div className="flex p-2 gap-2 ">
               {formData.image && formData.image !== '' &&
-
                 <Image src={formData?.image?.original} width={100} height={100} />
               }
             </div>
+              </section>
 
-            </label>
           <label className={styles.containerdivright}>
-            product_type:
+            Product Type:
             <input className={styles.containerdivinput}
               type="text"
               name="product_type"
@@ -486,7 +505,7 @@ const Editdetails = (props) => {
             />
           </label>
           <label className={styles.containerdivright}>
-            min_price:
+            Minimun Price:
             <input className={styles.containerdivinput}
               type="text"
               name="min_price"
@@ -495,7 +514,7 @@ const Editdetails = (props) => {
             />
           </label>
           <label className={styles.containerdivright}>
-            max_price:
+            Maximum Price:
             <input className={styles.containerdivinput}
               type="number"
               name="max_price"
@@ -536,6 +555,7 @@ const Editdetails = (props) => {
             </div>
 
             <section className={styles.containerdivright}>
+              Select Tags:
                 <Select
                 isMulti={true}
                 value={selectedOptions}
@@ -552,7 +572,7 @@ const Editdetails = (props) => {
               <h1 className="text-lg text-center text-black ">Variations Form </h1>
               <div className={styles.containerdiv}>
                 <label className={styles.containerdivright}>
-                  attribute_id:
+                  Attribute_id:
                   <input className={styles.containerdivinput}
                     type="text"
                     name="attribute_id"
@@ -561,7 +581,7 @@ const Editdetails = (props) => {
                   />
                 </label>
                 <label className={styles.containerdivright}>
-                  value:
+                  Value :
                   <input className={styles.containerdivinput}
                     type="text"
                     name="value"
@@ -570,7 +590,7 @@ const Editdetails = (props) => {
                   />
                 </label>
                 <label className={styles.containerdivright}>
-                  slug:
+                  Slug :
                   <input className={styles.containerdivinput}
                     type="text"
                     name="slug"
@@ -578,10 +598,10 @@ const Editdetails = (props) => {
                     onChange={(e) => { handleVariationAttributeChange(e, index) }}
                   />
                 </label>
-              </div>
-              <div className={styles.containerdiv}>
+              {/* </div>
+              <div className={styles.containerdiv}> */}
                 <label className={styles.containerdivright}>
-                  name:
+                  Name:
                   <input className={styles.containerdivinput}
                     type="text"
                     name="name"
@@ -591,6 +611,7 @@ const Editdetails = (props) => {
                 </label>
                 
                 <label className={styles.containerdivright}>
+                  Select Attribute:
                   <Select
                     isMulti={true}
                     // value={selectedOptionsAttribute}
@@ -627,7 +648,7 @@ const Editdetails = (props) => {
               <div className={styles.containerdiv}>
 
                 <label className={styles.containerdivright}>
-                  title:
+                  Title:
                   <input className={styles.containerdivinput}
                     type="text"
                     name="title"
@@ -636,12 +657,12 @@ const Editdetails = (props) => {
                   />
                 </label>
                 <label className={styles.containerdivright}>
-                  price:
+                  Price:
                   <input className={styles.containerdivinput}
-                    type="number"
+                    type="tel"
                     name="price"
                     value={option.price}
-                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                    onChange={(e) => { handleVariationOptionNumberChange(index, e) }}
                   />
                 </label>
                 <label className={styles.containerdivright}>
@@ -669,16 +690,16 @@ const Editdetails = (props) => {
                 <label className={styles.containerdivright}>
                   is_disable:
                   <input className={styles.containerdivinput}
-                    type="number"
+                    type="text"
                     name="is_disable"
                     value={option.is_disable}
-                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                    onChange={(e) => { handleVariationOptionBoolean(index, e) }}
                   />
                 </label>
                 <label className={styles.containerdivright}>
                   sku:
                   <input className={styles.containerdivinput}
-                    type="number"
+                    type="text"
                     name="sku"
                     value={option.sku}
                     onChange={(e) => { handleVariationOptionChange(index, e) }}

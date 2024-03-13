@@ -264,7 +264,24 @@ const AddUser = () => {
   }
 
   
+ const handleVariationOptionBoolean=(index,e)=>{
+  e.preventDefault();
+  const { name   } = e.target;
 
+  setFormData(prevState => ({
+    ...prevState,
+    variation_options: prevState.variation_options.map((option, i) => {
+      if (i === index) {
+
+        return {
+          ...option,
+          [name]: !option.is_disable
+        };
+      }
+      return option;
+    })
+  }));
+ }
 
   const handleVariationOptionChange = (index, e) => {
     e.preventDefault();
@@ -655,7 +672,7 @@ const AddUser = () => {
               <div className={styles.containerdiv}>
 
                 <label className={styles.containerdivright}>
-                  title:
+                  Title:
                   <input className={styles.containerdivinput}
                     type="text"
                     name="title"
@@ -664,7 +681,7 @@ const AddUser = () => {
                   />
                 </label>
                 <label className={styles.containerdivright}>
-                  price:
+                  Price:
                   <input className={styles.containerdivinput}
                     type="number"
                     name="price"
@@ -688,31 +705,33 @@ const AddUser = () => {
                   quantity:
                   <input className={styles.containerdivinput}
                     type="tel"
-                    name="quantity"
+                    name="Quantity"
                     value={option.quantity}
                     onChange={(e) => { handleVariationOptionNumberChange(index, e) }}
                   />
                 </label>
 
                 <label className={styles.containerdivright}>
-                  is_disable:
+                  Is Disable:
                   <input className={styles.containerdivinput}
-                    type="number"
-                    name="is_disable"
+                    type="text"
+                    name="Is Disable"
                     value={option.is_disable}
-                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                    onChange={(e) => { handleVariationOptionBoolean(index, e) }}
                   />
+
                 </label>
                 <label className={styles.containerdivright}>
-                  sku:
+                  Sku:
                   <input className={styles.containerdivinput}
-                    type="number"
+                    type="text"
                     name="sku"
                     value={option.sku}
                     onChange={(e) => { handleVariationOptionChange(index, e) }}
                   />
                 </label>
                 <label className={styles.containerdivright}>
+                  Select Options
                   <Select
                     isMulti={true}
                     value={option.name}
