@@ -74,7 +74,7 @@ const DisplayUser = () => {
       alert("Record Updated Succes-full");
       setShow(!show)
     }
-    // fetchData()
+    fetchData()
   }
   const [loading,setLoading]=useState(true);
   useEffect(()=>{

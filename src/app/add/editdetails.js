@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "../page.module.css";
 import Image from 'next/image';
 import { IoIosCloseCircle } from 'react-icons/io';
@@ -6,7 +6,6 @@ import Select from 'react-select'
 const Editdetails = (props) => {
     const {data,oncancel,onUpdate}=props;
     const [formData, setFormData] = useState({
-      // id:data._id,
       name: data?.name ,
       slug:  data?.slug,
       description:data?.description,
@@ -63,10 +62,9 @@ const Editdetails = (props) => {
 
       useEffect(()=>{
         setSelectedOptions(data.tag.map((tag=>({value:tag.name,label:tag.slug}))))
-        // setSelectedOptionsAttribute(updatedVariations);
-        setSelectedOptionsAttribute(formData.variations.map((item)=> item.attribute))
-        setSelectedOptionIndex(formData.variation_options.map((item)=> item.options))
-      },[data?.tag,formData.variation_options])
+        setSelectedOptionsAttribute(formData.variations.map((item)=> item?.attribute))
+        setSelectedOptionIndex(formData.variation_options.map((item)=> item?.options))
+      },[data?.tag,formData.variation_options,formData.variations])
   
 console.log("attribute",selectedOptionsAttribute);
       const handleChange = (e) => {

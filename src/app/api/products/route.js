@@ -7,8 +7,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(){
     let data=[]
     try{
-        await mongoose.connect(con)
-        data =await Product.find();
+      await mongoose.connect(con)
+    
+       data =await Product.find();
     }catch(err){
         data={Success:false}
     }
@@ -46,4 +47,16 @@ export async function POST(request){
     //     await mongoose.connection.close();
     // }
     // return NextResponse.json({ success: true });
+}
+
+export async function DELETE(request){
+    
+    const id=request.nextUrl.searchParams.get("id")
+
+    const record={_id:id}
+    // check the connection
+    await mongoose.connect(con)
+
+    const result=await Product.deleteOne(record);
+    return NextResponse.json({result,success:true})
 }
