@@ -304,12 +304,14 @@ const AddUser = () => {
     }));
   };
   
-  const handleVariationOptionNumberChange = (index, e) => {
-    e.preventDefault();
+  const handleVariationOptionNumberChange = (index,e) => {
 
+    e.preventDefault()
     const { name, value } = e.target;
-    console.log(name, value, index);
-    const parsedValue = parseFloat(value);
+    console.log(value);
+  
+    // const parsedValue = parseFloat(value);
+    const newValue = !isNaN(value) && value !== '' ? parseFloat(value) : 0;
     setFormData(prevState => ({
       ...prevState,
       variation_options: prevState.variation_options.map((option, i) => {
@@ -317,7 +319,7 @@ const AddUser = () => {
 
           return {
             ...option,
-            [name]: parsedValue
+            [name]: newValue
           };
         }
         return option;
@@ -597,7 +599,6 @@ const AddUser = () => {
         <div>
           {formData.variations.map((option, index) => (
             <form className="mt-10" key={index}>
-              {option?.attribute.name}
               <h1 className="text-lg text-center text-black ">Variations Form </h1>
               <div className={styles.containerdiv}>
                 <label className={styles.containerdivright}>
@@ -700,24 +701,25 @@ const AddUser = () => {
                 </label>
               </div>
               <div className={styles.containerdiv}>
-
+             
                 <label className={styles.containerdivright}>
                   quantity:
                   <input className={styles.containerdivinput}
                     type="tel"
-                    name="Quantity"
+                    name="quantity"
                     value={option.quantity}
-                    onChange={(e) => { handleVariationOptionNumberChange(index, e) }}
+                    onChange={(e) => { handleVariationOptionNumberChange(index,e) }}
                   />
                 </label>
 
                 <label className={styles.containerdivright}>
                   Is Disable:
                   <input className={styles.containerdivinput}
-                    type="text"
-                    name="Is Disable"
+                    type="tel"
+                    name="is_disable"
                     value={option.is_disable}
                     onChange={(e) => { handleVariationOptionBoolean(index, e) }}
+                 
                   />
 
                 </label>

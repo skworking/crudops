@@ -397,6 +397,8 @@ const Editdetails = (props) => {
           })
         }));
        }
+
+       
     return (
     <div>
         <h1 className={styles.heading}>Record Details Edit({data?._id})</h1>
