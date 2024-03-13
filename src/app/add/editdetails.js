@@ -198,6 +198,7 @@ console.log("attribute",selectedOptionsAttribute);
                 }
               };
             }
+            return item;
           })
         }))
       }
