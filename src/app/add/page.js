@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from 'next/navigation'
 import { IoIosArrowDown } from "react-icons/io";
 import Select from 'react-select'
+import { options,tags,attributetab } from "../component/common/comman";
 const AddUser = () => {
 
   const [view, setView] = useState(false)
@@ -17,13 +18,13 @@ const AddUser = () => {
     title: '',
     price: '',
     sale_price: '',
-    quantity: '',
+    quantity: 0,
     is_disable: 0,
     sku: '',
     options: []
   };
   const initialVriation = {
-    attribute_id: null,
+    attribute_id: 0,
     value: '',
     attribute: {
       slug: '',
@@ -41,6 +42,7 @@ const AddUser = () => {
     },
     gallery: [],
     tag: [],
+    product_type:'',
     quantity: 0,
     price: '',
     sale_price: '',
@@ -62,10 +64,11 @@ const AddUser = () => {
 
   const handleNumberChange = (e) => {
     const { name, value } = e.target;
-    const parsedValue = parseFloat(value); // Parse value to number
+    const newValue = !isNaN(value) && value !== '' ? parseFloat(value) : 0;
+    // const parsedValue = parseFloat(value); // Parse value to number
     setFormData(prevState => ({
       ...prevState,
-      [name]: parsedValue // Store parsed value
+      [name]: newValue // Store parsed value
     }));
   };
   // console.log("select",selectedOptions);
@@ -142,24 +145,24 @@ const AddUser = () => {
     }
   }
 
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
+  // const options = [
+  //   { value: 'chocolate', label: 'Chocolate' },
+  //   { value: 'strawberry', label: 'Strawberry' },
+  //   { value: 'vanilla', label: 'Vanilla' }
+  // ]
 
-  const tags = [
-    { value: 'Phone', label: 'phone' },
-    { value: 'Apple', label: 'apple' },
-    { value: 'Cilantro', label: 'cilantro' },
-    { value: 'Smart TV', label: 'smart-tv' }
-  ];
-  const attributetab = [
-    { value: '12oz', label: '12oz', id: "3" },
-    { value: '24oz', label: '24oz', id: "3" },
-    { value: '36oz', label: '36oz', id: "3" },
+  // const tags = [
+  //   { value: 'Phone', label: 'phone' },
+  //   { value: 'Apple', label: 'apple' },
+  //   { value: 'Cilantro', label: 'cilantro' },
+  //   { value: 'Smart TV', label: 'smart-tv' }
+  // ];
+  // const attributetab = [
+  //   { value: '12oz', label: '12oz', id: "3" },
+  //   { value: '24oz', label: '24oz', id: "3" },
+  //   { value: '36oz', label: '36oz', id: "3" },
 
-  ]
+  // ]
 
   const [model, setModel] = useState(false)
 
@@ -239,6 +242,28 @@ const AddUser = () => {
 
   }
 
+  const handleVariationNumberChange = (e, index) => {
+
+    const { name, value } = e.target;
+    // const parsedValue = parseFloat(value);
+    const newValue = !isNaN(value) && value !== '' ? parseFloat(value) : 0;
+    setFormData(prevState => ({
+      ...prevState,
+      variations: prevState.variations.map((option, i) => {
+        if (i === index) {
+          return {
+            ...option,
+            [name]: newValue
+          };
+        }
+        return option;
+      }),
+
+    }));
+
+  }
+
+  
 
 
   const handleVariationOptionChange = (index, e) => {
@@ -255,6 +280,27 @@ const AddUser = () => {
           return {
             ...option,
             [name]: value
+          };
+        }
+        return option;
+      })
+    }));
+  };
+  
+  const handleVariationOptionNumberChange = (index, e) => {
+    e.preventDefault();
+
+    const { name, value } = e.target;
+    console.log(name, value, index);
+    const parsedValue = parseFloat(value);
+    setFormData(prevState => ({
+      ...prevState,
+      variation_options: prevState.variation_options.map((option, i) => {
+        if (i === index) {
+
+          return {
+            ...option,
+            [name]: parsedValue
           };
         }
         return option;
@@ -321,7 +367,7 @@ const AddUser = () => {
           title: '',
           price: '',
           sale_price: '',
-          quantity: '',
+          quantity: 0,
           is_disable: '',
           sku: '',
           options: []
@@ -398,10 +444,11 @@ const AddUser = () => {
           </label>
           <label className={styles.containerdivright}>
             Quantity:
+            {formData.quantity}
             <input className={styles.containerdivinput}
               type="tel"
               name="quantity"
-              value={formData.quantity}
+              value={formData.quantity }
               onChange={handleNumberChange}
             />
           </label>
@@ -442,6 +489,32 @@ const AddUser = () => {
             />
           </label>
           <label className={styles.containerdivright}>
+           
+           <input className={styles.containerdivinput}
+             type="file"
+             accept=".png,.jpg"
+             name="image"
+             onChange={handleHobbyImage}
+           />
+
+           <div className="flex p-2 gap-2 ">
+             {formData.image !== '' &&
+
+               <Image src={formData?.image?.original} width={100} height={100} />
+             }
+           </div>
+
+         </label>
+         <label className={styles.containerdivright}>
+            product_type:
+            <input className={styles.containerdivinput}
+              type="text"
+              name="product_type"
+              value={formData.product_type}
+              onChange={handleChange}
+            />
+          </label>
+          <label className={styles.containerdivright}>
             min_price:
             <input className={styles.containerdivinput}
               type="text"
@@ -451,21 +524,13 @@ const AddUser = () => {
             />
           </label>
           <label className={styles.containerdivright}>
-           
+            max_price:
             <input className={styles.containerdivinput}
-              type="file"
-              accept=".png,.jpg"
-              name="image"
-              onChange={handleHobbyImage}
+              type="number"
+              name="max_price"
+              value={formData.max_price}
+              onChange={handleNumberChange}
             />
-
-            <div className="flex p-2 gap-2 ">
-              {formData.image !== '' &&
-
-                <Image src={formData?.image?.original} width={100} height={100} />
-              }
-            </div>
-
           </label>
 
           
@@ -507,15 +572,7 @@ const AddUser = () => {
 
           />
           </section>
-          <label className={styles.containerdivright}>
-            max_price:
-            <input className={styles.containerdivinput}
-              type="number"
-              name="max_price"
-              value={formData.max_price}
-              onChange={handleNumberChange}
-            />
-          </label>
+          
 
         </div>
 
@@ -532,7 +589,7 @@ const AddUser = () => {
                     type="text"
                     name="attribute_id"
                     value={option?.attribute_id}
-                    onChange={(e) => { handleVariationChange(e, index) }}
+                    onChange={(e) => { handleVariationNumberChange(e, index) }}
                   />
                 </label>
                 <label className={styles.containerdivright}>
@@ -630,10 +687,10 @@ const AddUser = () => {
                 <label className={styles.containerdivright}>
                   quantity:
                   <input className={styles.containerdivinput}
-                    type="text"
+                    type="tel"
                     name="quantity"
                     value={option.quantity}
-                    onChange={(e) => { handleVariationOptionChange(index, e) }}
+                    onChange={(e) => { handleVariationOptionNumberChange(index, e) }}
                   />
                 </label>
 

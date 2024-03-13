@@ -3,6 +3,7 @@ import styles from "../page.module.css";
 import Image from 'next/image';
 import { IoIosCloseCircle } from 'react-icons/io';
 import Select from 'react-select'
+import { options,tags, attributetab } from '../component/common/comman';
 const Editdetails = (props) => {
     const {data,oncancel,onUpdate}=props;
     const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const Editdetails = (props) => {
       },
       gallery:data.gallery,
       tag:data.tag,
+      product_type:data.product_type,
       quantity:data.quantity,
       price:data.price,
       sale_price:data.sale_price,
@@ -37,25 +39,25 @@ const Editdetails = (props) => {
     }
   
     /// this value add manualy now thake come from redux latter
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
+    // const options = [
+    //     { value: 'chocolate', label: 'Chocolate' },
+    //     { value: 'strawberry', label: 'Strawberry' },
+    //     { value: 'vanilla', label: 'Vanilla' }
+    //   ]
 
-    const attributetab = [
-        { value: '12oz', label: '12oz', id: "3" },
-        { value: '24oz', label: '24oz', id: "3" },
-        { value: '36oz', label: '36oz', id: "3" },
+    // const attributetab = [
+    //     { value: '12oz', label: '12oz', id: "3" },
+    //     { value: '24oz', label: '24oz', id: "3" },
+    //     { value: '36oz', label: '36oz', id: "3" },
     
-      ]
+    //   ]
     
-    const tags = [
-        { value: 'Phone', label: 'phone' },
-        { value: 'Apple', label: 'apple' },
-        { value: 'Cilantro', label: 'cilantro' },
-        { value: 'Smart TV', label: 'smart-tv' }
-      ];
+    // const tags = [
+    //     { value: 'Phone', label: 'phone' },
+    //     { value: 'Apple', label: 'apple' },
+    //     { value: 'Cilantro', label: 'cilantro' },
+    //     { value: 'Smart TV', label: 'smart-tv' }
+    //   ];
     
 
    
@@ -66,7 +68,7 @@ const Editdetails = (props) => {
         setSelectedOptionIndex(formData.variation_options.map((item)=> item?.options))
       },[data?.tag,formData.variation_options,formData.variations])
   
-console.log("attribute",selectedOptionsAttribute);
+
       const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -77,10 +79,11 @@ console.log("attribute",selectedOptionsAttribute);
 
       const handleNumberChange = (e) => {
         const { name, value } = e.target;
-        const parsedValue = parseFloat(value); // Parse value to number
+        const newValue = !isNaN(value) && value !== '' ? parseFloat(value) : 0;
+        // const parsedValue = parseFloat(value); // Parse value to number
         setFormData(prevState => ({
           ...prevState,
-          [name]: parsedValue // Store parsed value
+          [name]: newValue // Store parsed value
         }));
       };
 
@@ -172,6 +175,28 @@ console.log("attribute",selectedOptionsAttribute);
               return {
                 ...option,
                 [name]: value
+              };
+            }
+            return option;
+          }),
+    
+        }));
+    
+      }
+      
+    
+      const handleVariationNumberChange = (e, index) => {
+
+        const { name, value } = e.target;
+        // const parsedValue = parseFloat(value);
+        const newValue = !isNaN(value) && value !== '' ? parseFloat(value) : 0;
+        setFormData(prevState => ({
+          ...prevState,
+          variations: prevState.variations.map((option, i) => {
+            if (i === index) {
+              return {
+                ...option,
+                [name]: newValue
               };
             }
             return option;
@@ -308,7 +333,27 @@ console.log("attribute",selectedOptionsAttribute);
           })
         }));
       };
-
+      const handleVariationOptionNumberChange = (index, e) => {
+        e.preventDefault();
+    
+        const { name, value } = e.target;
+        console.log(name, value, index);
+        const parsedValue = parseFloat(value);
+        setFormData(prevState => ({
+          ...prevState,
+          variation_options: prevState.variation_options.map((option, i) => {
+            if (i === index) {
+    
+              return {
+                ...option,
+                [name]: parsedValue
+              };
+            }
+            return option;
+          })
+        }));
+      };
+    
       const handleSelectoption = (selectedOption, index) => {
       
         const updatedOptions = selectedOption.map(option => ({
@@ -413,15 +458,6 @@ console.log("attribute",selectedOptionsAttribute);
             />
           </label>
           <label className={styles.containerdivright}>
-            min_price:
-            <input className={styles.containerdivinput}
-              type="text"
-              name="min_price"
-              value={formData.min_price}
-              onChange={handleNumberChange}
-            />
-          </label>
-          <label className={styles.containerdivright}>
 
             <input className={`${styles.containerdivinput} `}
               type="file"
@@ -439,7 +475,34 @@ console.log("attribute",selectedOptionsAttribute);
               }
             </div>
 
-           </label>
+            </label>
+          <label className={styles.containerdivright}>
+            product_type:
+            <input className={styles.containerdivinput}
+              type="text"
+              name="product_type"
+              value={formData.product_type}
+              onChange={handleChange}
+            />
+          </label>
+          <label className={styles.containerdivright}>
+            min_price:
+            <input className={styles.containerdivinput}
+              type="text"
+              name="min_price"
+              value={formData.min_price}
+              onChange={handleNumberChange}
+            />
+          </label>
+          <label className={styles.containerdivright}>
+            max_price:
+            <input className={styles.containerdivinput}
+              type="number"
+              name="max_price"
+              value={formData.max_price}
+              onChange={handleNumberChange}
+            />
+          </label>
             <div className={`${styles.containerdivright} flex  flex-col`}>
                 Select Multiple Image 
                 <input className={styles.containerdivinput}
@@ -482,15 +545,7 @@ console.log("attribute",selectedOptionsAttribute);
 
                 />
             </section>
-            <label className={styles.containerdivright}>
-            max_price:
-            <input className={styles.containerdivinput}
-              type="number"
-              name="max_price"
-              value={formData.max_price}
-              onChange={handleNumberChange}
-            />
-          </label>
+           
          </div>
          {formData?.variations?.map((option, index) => (
             <form className="mt-10">
@@ -502,7 +557,7 @@ console.log("attribute",selectedOptionsAttribute);
                     type="text"
                     name="attribute_id"
                     value={option?.attribute_id}
-                    onChange={(e) => { handleVariationChange(e, index) }}
+                    onChange={(e) => { handleVariationNumberChange(e, index) }}
                   />
                 </label>
                 <label className={styles.containerdivright}>

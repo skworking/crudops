@@ -6,7 +6,6 @@ import {useRouter} from 'next/navigation'
 const EditUser=(props)=> {
   const {data,oncancel,onUpdate}=props;
 
-  const router = useRouter()
   const [formData, setFormData] = useState({
  
     name: data?.name ,
