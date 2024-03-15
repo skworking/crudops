@@ -22,6 +22,11 @@ const NavList=()=>{
                     Exel-CSV
                 </Link>
             </li>
+            <li className='hover:bg-white p-2 rounded'>
+                <Link href={'/import-file'}>
+                    Upload EXCEL
+                </Link>
+            </li>
             </ul>
         </>
     )

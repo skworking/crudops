@@ -9,6 +9,7 @@ import { CiSearch } from "react-icons/ci";
 import EditUser from '../component/edituser/page';
 import Editdetails from '../add/editdetails';
 import * as XLSX from 'xlsx';
+import { saveAs } from "file-saver";
 
 const DisplayUser = () => {
   const [users, setUsers] = useState([]);
@@ -16,6 +17,7 @@ const DisplayUser = () => {
   const [data,setData]=useState()
   const [search,setSearch]=useState('')
   const router = useRouter()
+
   console.log(users);
 
   const fetchData = async () => {
@@ -102,27 +104,38 @@ const DisplayUser = () => {
   }
 
     // // Helper function to flatten nested data
-    const flattenData = (nestedData) => {
-      const flatData = {};
+  //   const flattenData = (nestedData) => {
+  //     const flatData = {};
   
-      // Recursive function to flatten nested objects
-      const flattenObject = (obj, prefix = '') => {
-        for (const key in obj) {
-          if (typeof obj[key] === 'object' && obj[key] !== null) {
-            flattenObject(obj[key], `${prefix}${key}_`);
-          } else {
-            // Truncate text if it exceeds Excel's cell limit
-            const value = obj[key] && obj[key].length > 32767 ? obj[key].substring(0, 32767) : obj[key];
-            // console.log(value);
-            flatData[`${prefix}${key}`] = value;
-          }
-        }
-      };
+  //     // Recursive function to flatten nested objects
+  //     const flattenObject = (obj, prefix = '') => {
+  //         for (const key in obj) {
+  //             if (typeof obj[key] === 'object' && obj[key] !== null) {
+  //                 flattenObject(obj[key], `${prefix}${key}_`);
+  //             } else {
+  //                 // Truncate text if it exceeds Excel's cell limit
+  //                 const value = obj[key] && obj[key].length > 32767 ? obj[key].substring(0, 32767) : obj[key];
+  //                 // console.log(value);
+  //                 flatData[`${prefix}${key}`] = value;
+  //             }
+  //         }
+  //     };
   
-      flattenObject(nestedData);
-      return [flatData];
-    };
-
+  //     flattenObject(nestedData);
+  //     // Splitting the second object's data and inserting new line based on index
+  //     const keys = Object.keys(flatData);
+  //     const secondObjectKey = keys[1]; // Assuming the second object needs to be split
+  //     console.log(secondObjectKey);
+  //     if (flatData[secondObjectKey] && typeof flatData[secondObjectKey] === 'string') {
+  //         const splitValues = flatData[secondObjectKey].split('\n');
+  //         for (let i = 0; i < splitValues.length; i++) {
+  //             flatData[`${secondObjectKey}_${i + 1}`] = splitValues[i];
+  //         }
+  //         delete flatData[secondObjectKey];
+  //     }
+  
+  //     return [flatData];
+  // };
   // const handleExport=(data,fileName="datafile")=>{
     // const flattenedData = flattenData(data);
     // const wb = XLSX.utils.book_new();
@@ -133,19 +146,83 @@ const DisplayUser = () => {
   // }
 
 
-  const handleExport = (data, fileName = "datafile") => {
-    const flattenedData = flattenData(data);
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet([Object.keys(flattenedData[0])]); // Initialize worksheet with header row
+  // const handleExport = (data, fileName = "datafile") => {
+  //   const flattenedData = flattenData(data);
+  //   const wb = XLSX.utils.book_new();
+  //   const ws = XLSX.utils.aoa_to_sheet([Object.keys(flattenedData[0])]); // Initialize worksheet with header row
 
-    flattenedData.forEach((record) => {
-      const values = Object.values(record);
-      console.log(record);
-  
-      XLSX.utils.sheet_add_aoa(ws, [values], { origin: -1 }); // Add each record as a new row
+  //   flattenedData.forEach((record) => {
+  //       const values = Object.values(record);
+  //       // console.log(record);
+
+  //       XLSX.utils.sheet_add_aoa(ws, [values], { origin: -1 }); // Add each record as a new row
+  //   });
+  //   // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  //   // XLSX.writeFile(wb, `${fileName}.xlsx`);
+  // };
+
+  // const flattenData = users?.map(item => {
+  //   const flattenedItem = { ...item };
+  //   console.log(flattenedItem);
+  //   try{
+
+  //     if (flattenedItem.gallery) {
+  //       // Convert gallery array to string
+  //       flattenedItem.gallery = JSON.stringify(flattenedItem.gallery);
+  //     }
+      
+  //     return flattenedItem;
+  //   }catch(err){ 
+  //     console.log(err);
+  //   }
+  // });
+  const flattenData = users?.map(item => {
+    // here we can modify which colums data we want to add 
+    const flattenedItem = { ...item };
+
+    if (flattenedItem.gallery) {
+      console.log(flattenedItem.gallery);
+      // flattenedItem['Gallery ID']= (flattenedItem?.gallery[0]?._id)
+      // flattenedItem.galleryThumbnail = flattenedItem.gallery.thumbnail.toString(0,32767);
+      // flattenedItem.galleryOriginal = flattenedItem.gallery.original;
+      // delete flattenedItem.gallery;
+
+      // Convert gallery array to string
+      flattenedItem.gallery = JSON.stringify(flattenedItem.gallery).substring(0,32767);
+    }
+    if(flattenedItem.image){
+      flattenedItem.image = JSON.stringify(flattenedItem.image).substring(0,32767)
+    }
+    if(flattenedItem.tag){
+      // flattenedItem['Tag Names'] = flattenedItem.tag.map(tag => tag.name).join(', ');
+      // delete flattenedItem.tag;
+      flattenedItem.tag=JSON.stringify(flattenedItem.tag).substring(0,32767)
+    }
+    if(flattenedItem.variations){
+      flattenedItem.variations=JSON.stringify(flattenedItem.variations).substring(0,32767)
+    }
+    if(flattenedItem.variation_options){
+      flattenedItem.variation_options=JSON.stringify(flattenedItem.variation_options).substring(0,32767)
+    }
+    return flattenedItem;
+  });
+
+  const handleExport = () => {
+    const worksheet = XLSX.utils.json_to_sheet(flattenData);
+    // const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    // Buffer to store the generated Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
     });
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `${fileName}.xlsx`);
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    });
+    console.log(blob);
+    saveAs(blob, "exportedData.xlsx");
   };
 
   return (
