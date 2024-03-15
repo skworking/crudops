@@ -8,6 +8,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
 import EditUser from '../component/edituser/page';
 import Editdetails from '../add/editdetails';
+import * as XLSX from 'xlsx';
 
 const DisplayUser = () => {
   const [users, setUsers] = useState([]);
@@ -100,6 +101,53 @@ const DisplayUser = () => {
    }
   }
 
+    // // Helper function to flatten nested data
+    const flattenData = (nestedData) => {
+      const flatData = {};
+  
+      // Recursive function to flatten nested objects
+      const flattenObject = (obj, prefix = '') => {
+        for (const key in obj) {
+          if (typeof obj[key] === 'object' && obj[key] !== null) {
+            flattenObject(obj[key], `${prefix}${key}_`);
+          } else {
+            // Truncate text if it exceeds Excel's cell limit
+            const value = obj[key] && obj[key].length > 32767 ? obj[key].substring(0, 32767) : obj[key];
+            // console.log(value);
+            flatData[`${prefix}${key}`] = value;
+          }
+        }
+      };
+  
+      flattenObject(nestedData);
+      return [flatData];
+    };
+
+  // const handleExport=(data,fileName="datafile")=>{
+    // const flattenedData = flattenData(data);
+    // const wb = XLSX.utils.book_new();
+    // const ws = XLSX.utils.json_to_sheet(flattenedData);
+    // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // XLSX.writeFile(wb, `${fileName}.xlsx`);
+   
+  // }
+
+
+  const handleExport = (data, fileName = "datafile") => {
+    const flattenedData = flattenData(data);
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([Object.keys(flattenedData[0])]); // Initialize worksheet with header row
+
+    flattenedData.forEach((record) => {
+      const values = Object.values(record);
+      console.log(record);
+  
+      XLSX.utils.sheet_add_aoa(ws, [values], { origin: -1 }); // Add each record as a new row
+    });
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `${fileName}.xlsx`);
+  };
+
   return (
     <div className='overflow-x-auto  items-center'>
      {loading ? <div className='w-full  text-center m-auto'>Loading Data</div>
@@ -111,6 +159,7 @@ const DisplayUser = () => {
           <input type='text' placeholder='Search User List ' name='search' onChange={(e)=>handleSearch(e)} className='outline-none' />
           <CiSearch className='flex text-center' onClick={searchCall}/>
       </div>
+      <button className='bg-green-300 hover:bg-green-400 text-white font-bold px-2 rounded' onClick={()=>{handleExport(users)}}>Export data</button>
       </div>
       <table className="w-full bg-white shadow-md rounded-lg ">
         <thead className="bg-gray-200 text-gray-700 flex-1">
@@ -158,6 +207,7 @@ const DisplayUser = () => {
               <td className={`py-2 px-4 sm:flex-1  ${styles.wrap} `}>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={()=>handleEdit(user)}>Edit</button>
                 <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded " onClick={()=>{handleDelete(user._id)}}>Delete</button>
+                
               </td>
             </tr>
             
