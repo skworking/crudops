@@ -51,13 +51,3 @@ export async function POST(request){
     // }
 }
 
-export async function DELETE(request){
-    const userId=request.nextUrl.searchParams.get("id")
-    const record={_id:userId}
-    console.log(record);
-    // check the connection
-    await mongoose.connect(con)
-
-    const result=await User.deleteOne(record);
-    return NextResponse.json({result,massage:"Rocord deleted",success:true})
-}

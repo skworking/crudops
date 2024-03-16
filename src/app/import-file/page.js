@@ -1,15 +1,19 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx';
 import styles from '../page.module.css'
 import Image from 'next/image';
 import { FaFileAlt } from "react-icons/fa";
+import { IoCloseCircleOutline } from 'react-icons/io5';
+import Editdetails from '../add/editdetails';
 const ImportFile = () => {
-    const [Data, setData] = useState([]);
-
+    const [data, setData] = useState();
+    const [show,setShow]=useState(false);
+    let parsedData;
     const handleFileChange = (event) => {
+      // event.preventDefault();
         const file = event?.target?.files[0];
-        console.log(file);
+
         // if (!file) return;
         if(file){
 
@@ -19,15 +23,16 @@ const ImportFile = () => {
                 const workbook = XLSX.read(data, { type: 'array' });
                 const worksheet = workbook.Sheets[workbook.SheetNames[0]];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                console.log(jsonData);
-                const parsedData = jsonData.map(item => {
-                    // Check and parse each nested property if it exists
-                    // if (item.gallery) {
-                    //     item.gallery = JSON.parse(item.gallery);
-                    // }
-                    // if (item.image) {
-                    //     item.image = JSON.parse(item.image);
-                    // }
+                  // jsonData.map((item)=>{
+                  //   console.log(JSON.parse(item.image));
+                  // })
+                   parsedData = jsonData?.map(item => {
+                 
+                  item.image = JSON.parse(item.image);
+                    
+                    if(item.gallery){
+                      item.gallery=JSON.parse(item.gallery);
+                    }
                     if(item.tag){
                         item.tag=JSON.parse(item.tag)
                     }
@@ -41,13 +46,56 @@ const ImportFile = () => {
                     // Repeat this process for other nested properties
                     return item;
                 });
-                console.log(parsedData);
+                setData(parsedData)
             }
             reader.readAsArrayBuffer(file);
+        }else{
+          console.log("dd");
         }
-    }    
+    }   
+
+    useEffect(()=>{
+      handleFileChange()
+    },[data])
+    const handleDelete=async(id)=>{
+  
+      let response = await fetch("http://localhost:3000/api/users/"+id,{
+        method:"DELETE"
+      });
+      response=await response.json();
+      if(response.success){
+        alert("Record Deleted Success-full")
+        // router.push('/user-list',{scroll:false})
+        fetchData()
+      }
+    }
+
+    const handleEdit=(data)=>{
+      setData(data)
+      setShow(!show)
+  
+    }
+    const handleCancel=(e)=>{
+      e.preventDefault();
+        setShow(!show)
+    }
+    const handleUpdate=async(data,id)=>{
+      let result=await fetch(`http://localhost:3000/api/users/${id}`,{
+        method:"PUT",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body:JSON.stringify(data)
+      })
+      result=await result.json();
+  
+      if(result.success){
+        alert("Record Updated Succes-full");
+        setShow(!show)
+      }
+      fetchData()
+    }
   return (
-    <div>
     <div className='flex-col p-2'>
 
       <h1 className='text-2xl text-center'>Read Excel file</h1>
@@ -58,12 +106,71 @@ const ImportFile = () => {
         <FaFileAlt className='w-fit text-3xl cursor-pointer hover:fill-slate-400' onClick={() => document.getElementById('filePicker').click()}/>
         </div>
         <input type='file' id="filePicker" accept='.csv, .xlsx' style={{ display: 'none' }} onChange={handleFileChange} />
-        {Data.length > 0&&
+        {data?.length > 0 &&
         <button className='bg-gray-300 p-2 rounded hover:bg-gray-400'>Save</button>
         }
       </div>
-      </div>
+      <table className="w-full bg-white shadow-md rounded-lg ">
+        <thead className="bg-gray-200 text-gray-700 flex-1">
+          <tr className=''>
+            <th className="py-2 px-4">Name</th>
+            <th className="py-2 px-4">slug</th>
+            <th className="py-2 px-4">description</th>
+            <th className="py-2 px-4">image</th>
+           
+            <th className="py-2 px-4 ">Operation</th>
+          </tr>
+        </thead>
+        <tbody className="text-gray-600 text-center ">
+
+          {data?.length>0 ? data?.map(user => (
+            <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-100 ">
+              <td className="py-2 px-4">{user.name}</td>
+              <td className="py-2 px-4">{user.slug}</td>
+              <td className="py-2 px-4">{user.description}</td>
+              <td className="py-2 px-4 flex justify-around">
+{/*                 
+                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.name}</span>
+                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.slug}</span> */}
+               
+                {/* <Image src={user?.image?.original || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user?.name} className="inline-block " width='50' height={20} /> */}
+               
+                <img src={user?.image?.original ? `http://localhost:3000/Images/`+user?.image?.original:''}  width={100} height={50} />
+              </td>
+              {/* <td className="py-2 px-4 ">
+                        
+                {user?.gallery.length >= 0 &&
+                  user?.gallery.map((list)=>{ return(
+                    <div key={list?._id}>
+
+                    <Image src={list.original} alt={user?.name} className="inline-block " width='50' height={20} />
+                    </div>
+                    )
+                  })
+                }
+              </td> */}
+              <td className={`py-2 px-4 sm:flex-1  ${styles.wrap} `}>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={()=>handleEdit(user)}>Edit</button>
+                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded " onClick={()=>{handleDelete(user._id)}}>Delete</button>
+                
+              </td>
+            </tr>
+            
+          )):
+          "Data not Found"
+          }
+        </tbody>
+      </table>
+      {show && 
+          <div className='absolute top-0 h-auto w-full p-20 bg-gray-400 opacity-80 text-center'>
+            <IoCloseCircleOutline className=' float-right  hover:bg-white bg-gray-400 w-[30px] h-[30px] text-center  p-1 rounded-full cursor-pointer' onClick={()=>{setShow(!show)}} />
+              
+            <Editdetails data={data} oncancel={handleCancel} onUpdate={handleUpdate}/>
+           
+          </div>
+          }
     </div>
+    
   )
 }
 

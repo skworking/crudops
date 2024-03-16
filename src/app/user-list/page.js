@@ -18,7 +18,7 @@ const DisplayUser = () => {
   const [search,setSearch]=useState('')
   const router = useRouter()
 
-  console.log(users);
+
 
   const fetchData = async () => {
     try {
@@ -39,7 +39,7 @@ const DisplayUser = () => {
   }, []);
 
   const handleDelete=async(id)=>{
-    console.log("select id-",id);
+  
     let response = await fetch("http://localhost:3000/api/users/"+id,{
       method:"DELETE"
     });
@@ -62,8 +62,6 @@ const DisplayUser = () => {
       setShow(!show)
   }
   const handleUpdate=async(data,id)=>{
-    console.log(data,id);
-    // alert(id)
     let result=await fetch(`http://localhost:3000/api/users/${id}`,{
       method:"PUT",
       headers:{
@@ -72,7 +70,7 @@ const DisplayUser = () => {
       body:JSON.stringify(data)
     })
     result=await result.json();
-    console.log();
+
     if(result.success){
       alert("Record Updated Succes-full");
       setShow(!show)
@@ -94,10 +92,10 @@ const DisplayUser = () => {
   const searching=async()=>{
     let result=await fetch(`http://localhost:3000/api/users/?name=${search}`)
     const data = await result.json();
-    console.log("search-data",data);
+  
   }
   const searchCall=()=>{
-    console.log(search);
+   
    if(search.length >0){
     searching()
    }
@@ -109,7 +107,7 @@ const DisplayUser = () => {
     const flattenedItem = { ...item };
 
     if (flattenedItem.gallery) {
-      console.log(flattenedItem.gallery);
+   
       // flattenedItem['Gallery ID']= (flattenedItem?.gallery[0]?._id)
       // flattenedItem.galleryThumbnail = flattenedItem.gallery.thumbnail.toString(0,32767);
       // flattenedItem.galleryOriginal = flattenedItem.gallery.original;
@@ -149,7 +147,7 @@ const DisplayUser = () => {
     const blob = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
     });
-    console.log(blob);
+    
     saveAs(blob, "exportedData.xlsx");
   };
 
@@ -173,14 +171,7 @@ const DisplayUser = () => {
             <th className="py-2 px-4">slug</th>
             <th className="py-2 px-4">description</th>
             <th className="py-2 px-4">image</th>
-            {/* <th className="py-2 px-4">Gallery</th> */}
-            {/* <th className="py-2 px-4 bg-slate-200"> Hobby
-             <span className='flex justify-around bg-gray-400'>
-              <span className="py-2 px-4">Hobby Name</span>
-              <span className="py-2 px-4">Hobby Slug</span>
-              <span className="py-2 px-4">Hobby Image</span>
-            </span>
-            </th> */}
+           
             <th className="py-2 px-4 ">Operation</th>
           </tr>
         </thead>

@@ -15,3 +15,5 @@ export const attributetab = [
     { value: '36oz', label: '36oz', id: "3" },
 
   ]
+
+

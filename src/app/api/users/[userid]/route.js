@@ -40,3 +40,15 @@ export async function GET(content){
     const result=await User.findOne(record);
     return NextResponse.json({result,success:true})
 }
+
+export async function DELETE({params}){
+    const userId=params.userid;
+
+    const record={_id:userId}
+    console.log(record,userId);
+    // check the connection
+    await mongoose.connect(con)
+
+    const result=await User.deleteOne(record);
+    return NextResponse.json({result,massage:"Rocord deleted",success:true})
+}
