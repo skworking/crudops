@@ -95,9 +95,6 @@ const Editdetails = (props) => {
           const data=new FormData()
           data.append("file",file)
           const res=await fetch('/api/upload',{method:'PUT',body:data})
-          // console.log(res);
-          // result=await res.json();
-          // console.log(result);
           if(res.ok){
             console.log(res);
             setFormData(prevState => ({
@@ -142,34 +139,68 @@ const Editdetails = (props) => {
       //   reader.readAsDataURL(file);
       // }
 
-      const handleGalleryImage = (e) => {
+      // const handleGalleryImage = (e) => {
 
+      //   const files = e.target.files;
+    
+      //   for (let i = 0; i < files.length; i++) {
+      //     const file = files[i];
+      //     const reader = new FileReader();
+    
+      //     reader.onload = () => {
+      //       // Update formData with the new image
+      //       setFormData(prevState => ({
+      //         ...prevState,
+      //         gallery: [
+      //           ...prevState.gallery,
+      //           {
+      //             thumbnail: reader.result,
+      //             original: reader.result
+      //           }
+      //         ]
+      //       }));
+      //     };
+    
+      //     // Read the file as a data URL
+      //     reader.readAsDataURL(file);
+      //   }
+    
+      // }
+      console.log(formData);
+      const handleGalleryImage = async (e) => {
+        e.preventDefault();
         const files = e.target.files;
+        const newGalleryImages = [];
     
         for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const reader = new FileReader();
-    
-          reader.onload = () => {
-            // Update formData with the new image
-            setFormData(prevState => ({
-              ...prevState,
-              gallery: [
-                ...prevState.gallery,
-                {
-                  thumbnail: reader.result,
-                  original: reader.result
+            const file = files[i];
+            const data = new FormData();
+            data.append("file", file);
+            
+            try {
+                const res = await fetch('/api/upload', { method: 'PUT', body: data });
+                if (res.ok) {
+                    newGalleryImages.push({
+                        thumbnail: file.name,
+                        original: file.name
+                    });
+                } else {
+                    console.error("Failed to upload image:", file.name);
                 }
-              ]
-            }));
-          };
-    
-          // Read the file as a data URL
-          reader.readAsDataURL(file);
+            } catch (error) {
+                console.error("Error uploading image:", error);
+            }
         }
     
-      }
-      console.log(formData);
+        // After all uploads are complete, update the state with new gallery images
+        setFormData(prevState => ({
+            ...prevState,
+            gallery: [
+                ...prevState.gallery,
+                ...newGalleryImages
+            ]
+        }));
+      };
       const handkeImageRemove=(index)=>{
       
        let updated=[...formData.gallery]
@@ -574,8 +605,8 @@ const Editdetails = (props) => {
                         <div key={item._id} 
                     
                         className="w-[100px]  flex flex-col justify-between text-center flex-wrap">
-
-                        <Image src={item?.original} className="  object-contain" width={200} height={100} />
+                           <img src={item?.original ? `http://localhost:3000/Images/`+item?.original:''}  width={100} height={100} />
+                        {/* <Image src={item?.original} className="  object-contain" width={200} height={100} /> */}
                         <IoIosCloseCircle  
                             className='cursor-pointer m-3 hover:fill-white'
                             onClick={()=>{handkeImageRemove(index)}}/>
