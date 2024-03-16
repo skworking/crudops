@@ -87,29 +87,60 @@ const Editdetails = (props) => {
         }));
       };
 
-      const handleImage = (e) => {
+      const handleImage = async(e) => {
         e.preventDefault();
         const file = e.target.files[0];
-        console.log("file", file);
-        // Create a new FileReader instance
-        const reader = new FileReader();
-      
-        reader.onload = () => {
-          setFormData(prevState => ({
-            ...prevState,
-    
-            image: {
-              ...prevState.image,
-              thumbnail: reader.result,
-              original: reader.result
-            }
-    
-          }));
-    
+        
+        try{
+          const data=new FormData()
+          data.append("file",file)
+          const res=await fetch('/api/upload',{method:'PUT',body:data})
+          // console.log(res);
+          // result=await res.json();
+          // console.log(result);
+          if(res.ok){
+            console.log(res);
+            setFormData(prevState => ({
+                  ...prevState,
+                  image: {
+                    ...prevState.image,
+                    // id:randomid,
+                    thumbnail:file.name ,
+                    original: file.name
+                  }
+          
+                }));
+          }else {
+            console.error("Failed to upload image. Status:", res);
+            // Handle error as needed
+          }
+        }catch(err){
+          console.log(err);
         }
-        // Read the file as a data URL
-        reader.readAsDataURL(file);
       }
+      // const handleImage = (e) => {
+      //   e.preventDefault();
+      //   const file = e.target.files[0];
+      //   console.log("file", file);
+      //   // Create a new FileReader instance
+      //   const reader = new FileReader();
+      
+      //   reader.onload = () => {
+      //     setFormData(prevState => ({
+      //       ...prevState,
+    
+      //       image: {
+      //         ...prevState.image,
+      //         thumbnail: reader.result,
+      //         original: reader.result
+      //       }
+    
+      //     }));
+    
+      //   }
+      //   // Read the file as a data URL
+      //   reader.readAsDataURL(file);
+      // }
 
       const handleGalleryImage = (e) => {
 
@@ -492,7 +523,8 @@ const Editdetails = (props) => {
 
             <div className="flex p-2 gap-2 ">
               {formData.image && formData.image !== '' &&
-                <Image src={formData?.image?.original} width={100} height={100} />
+               <img src={formData?.image?.original ? `http://localhost:3000/Images/`+formData?.image?.original:''}  width={100} height={50} />
+                // <Image src={formData?.image?.original} width={100} height={100} />
               }
             </div>
               </section>

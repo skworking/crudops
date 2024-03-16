@@ -103,79 +103,7 @@ const DisplayUser = () => {
    }
   }
 
-    // // Helper function to flatten nested data
-  //   const flattenData = (nestedData) => {
-  //     const flatData = {};
-  
-  //     // Recursive function to flatten nested objects
-  //     const flattenObject = (obj, prefix = '') => {
-  //         for (const key in obj) {
-  //             if (typeof obj[key] === 'object' && obj[key] !== null) {
-  //                 flattenObject(obj[key], `${prefix}${key}_`);
-  //             } else {
-  //                 // Truncate text if it exceeds Excel's cell limit
-  //                 const value = obj[key] && obj[key].length > 32767 ? obj[key].substring(0, 32767) : obj[key];
-  //                 // console.log(value);
-  //                 flatData[`${prefix}${key}`] = value;
-  //             }
-  //         }
-  //     };
-  
-  //     flattenObject(nestedData);
-  //     // Splitting the second object's data and inserting new line based on index
-  //     const keys = Object.keys(flatData);
-  //     const secondObjectKey = keys[1]; // Assuming the second object needs to be split
-  //     console.log(secondObjectKey);
-  //     if (flatData[secondObjectKey] && typeof flatData[secondObjectKey] === 'string') {
-  //         const splitValues = flatData[secondObjectKey].split('\n');
-  //         for (let i = 0; i < splitValues.length; i++) {
-  //             flatData[`${secondObjectKey}_${i + 1}`] = splitValues[i];
-  //         }
-  //         delete flatData[secondObjectKey];
-  //     }
-  
-  //     return [flatData];
-  // };
-  // const handleExport=(data,fileName="datafile")=>{
-    // const flattenedData = flattenData(data);
-    // const wb = XLSX.utils.book_new();
-    // const ws = XLSX.utils.json_to_sheet(flattenedData);
-    // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    // XLSX.writeFile(wb, `${fileName}.xlsx`);
-   
-  // }
 
-
-  // const handleExport = (data, fileName = "datafile") => {
-  //   const flattenedData = flattenData(data);
-  //   const wb = XLSX.utils.book_new();
-  //   const ws = XLSX.utils.aoa_to_sheet([Object.keys(flattenedData[0])]); // Initialize worksheet with header row
-
-  //   flattenedData.forEach((record) => {
-  //       const values = Object.values(record);
-  //       // console.log(record);
-
-  //       XLSX.utils.sheet_add_aoa(ws, [values], { origin: -1 }); // Add each record as a new row
-  //   });
-  //   // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-  //   // XLSX.writeFile(wb, `${fileName}.xlsx`);
-  // };
-
-  // const flattenData = users?.map(item => {
-  //   const flattenedItem = { ...item };
-  //   console.log(flattenedItem);
-  //   try{
-
-  //     if (flattenedItem.gallery) {
-  //       // Convert gallery array to string
-  //       flattenedItem.gallery = JSON.stringify(flattenedItem.gallery);
-  //     }
-      
-  //     return flattenedItem;
-  //   }catch(err){ 
-  //     console.log(err);
-  //   }
-  // });
   const flattenData = users?.map(item => {
     // here we can modify which colums data we want to add 
     const flattenedItem = { ...item };
@@ -266,8 +194,10 @@ const DisplayUser = () => {
 {/*                 
                 <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.name}</span>
                 <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{user.hobby.slug}</span> */}
-                <Image src={user?.image?.original || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user?.name} className="inline-block " width='50' height={20} />
-                
+               
+                {/* <Image src={user?.image?.original || 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'} alt={user?.name} className="inline-block " width='50' height={20} /> */}
+               
+                <img src={user?.image?.original ? `http://localhost:3000/Images/`+user?.image?.original:''}  width={100} height={50} />
               </td>
               {/* <td className="py-2 px-4 ">
                         

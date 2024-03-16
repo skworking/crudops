@@ -73,32 +73,60 @@ const AddUser = () => {
   };
   // console.log("select",selectedOptions);
 
-  const handleHobbyImage = (e) => {
+  const handleHobbyImage = async(e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    console.log("file", file);
-    // Create a new FileReader instance
-    const reader = new FileReader();
-    // const randomid= Math.floor(Math.random() * 1000000000000);
-    reader.onload = () => {
-      // Set the data URL as the value of formData.hobby.image
-      setFormData(prevState => ({
-        ...prevState,
-
-        image: {
-          ...prevState.image,
-          // id:randomid,
-          thumbnail: reader.result,
-          original: reader.result
-        }
-
-      }));
-
+    
+    try{
+      const data=new FormData()
+      data.append("file",file)
+      const res=await fetch('/api/upload',{method:'POST',body:data})
+      // console.log(res);
+      // result=await res.json();
+      // console.log(result);
+      if(res.ok){
+        console.log(res);
+        setFormData(prevState => ({
+              ...prevState,
+              image: {
+                ...prevState.image,
+                // id:randomid,
+                thumbnail:file.name ,
+                original: file.name
+              }
+      
+            }));
+      }else {
+        console.error("Failed to upload image. Status:", res);
+        // Handle error as needed
+      }
+    }catch(err){
+      console.log(err);
     }
+
+
+    // const reader = new FileReader();
+    // reader.onload = () => {
+    //   // Set the data URL as the value of formData.hobby.image
+    //   setFormData(prevState => ({
+    //     ...prevState,
+
+    //     image: {
+    //       ...prevState.image,
+    //       // id:randomid,
+    //       thumbnail: reader.result,
+    //       original: reader.result
+    //     }
+
+    //   }));
+
+    // }
     // Read the file as a data URL
-    reader.readAsDataURL(file);
+    // reader.readAsDataURL(file);
   }
 
+ 
+  
   const handleGalleryImage = (e) => {
 
     const files = e.target.files;
@@ -515,12 +543,13 @@ const AddUser = () => {
              name="image"
              onChange={handleHobbyImage}
            />
-
+          
            <div className="flex p-2 gap-2 ">
-             {formData.image !== '' &&
+            <img src={formData.image.original ? `http://localhost:3000/Images/`+formData?.image?.original:''}  width={100} height={100} />
+             {/* {formData.image !== '' &&
 
                <Image src={formData?.image?.original} width={100} height={100} />
-             }
+             } */}
            </div>
 
          </label>
@@ -763,177 +792,7 @@ const AddUser = () => {
         <button className={styles.formbtn} type="submit" onClick={handleSubmit}>Submit</button>
 
       </form>
-      {/* {
-        view && <>
-          <div className="bg-red-400 absolute h-screen w-full top-12 ">
-            <button onClick={handleShow} className="absolute top-10 right-5 bg-gray-400 p-2 rounded-full w-10 h-10">
-              X
-            </button>
-            {formData.variations.map((option, index) => (
-              <form className="mt-10">
-                <h1 className="text-lg text-center text-white ">Variations Form </h1>
-                <div className={styles.containerdiv}>
-                  <label className={styles.containerdivright}>
-                    attribute_id:
-                    <input className={styles.containerdivinput}
-                      type="text"
-                      name="attribute_id"
-                      value={option?.attribute_id}
-                      onChange={(e) => { handleVariationChange(e, index) }}
-                    />
-                  </label>
-                  <label className={styles.containerdivright}>
-                    value:
-                    <input className={styles.containerdivinput}
-                      type="text"
-                      name="value"
-                      value={option?.value}
-                      onChange={(e) => { handleVariationChange(e, index) }}
-                    />
-                  </label>
-                  <label className={styles.containerdivright}>
-                    slug:
-                    <input className={styles.containerdivinput}
-                      type="text"
-                      name="slug"
-                      value={option?.attribute?.slug}
-                      onChange={(e) => { handleVariationAttributeChange(e, index) }}
-                    />
-                  </label>
-                </div>
-                <div className={styles.containerdiv}>
-                  <label className={styles.containerdivright}>
-                    name:
-                    <input className={styles.containerdivinput}
-                      type="text"
-                      name="name"
-                      value={option?.attribute?.name}
-                      onChange={(e) => { handleVariationAttributeChange(e, index) }}
-                    />
-                  </label>
-                  <label className={styles.containerdivright}>
-                    <Select
-                      isMulti={true}
-                      value={option?.attribute?.values?.name}
-                      onChange={(selectedOptions) => handleSelectAttribute(selectedOptions, index)}
-                      placeholder="Selected Attribute"
-                      options={attributetab}
-                    />
-                  </label>
-                </div>
-                <div className={styles.containerdiv}>
-                  <button onClick={handleAddVariation} className="w-1/6 ml-10 bg-gray-300 ">Add More</button>
-                </div>
-                <button onClick={()=>removeFormFields(index)}
-                  className={`w-1/6 p-2 ml-10 bg-gray-300 ${formData.variations.length > 1 ?'bg-red-500 opacity-100 text-bold':' opacity-50 bg-red-500 cursor-not-allowed'}`}
-                  disabled={formData.variations.length <= 1}
-                >
-                  Remove
-                </button>
-            
-              </form>
-            ))}
-          </div>
-        </>
-      } */}
-
-      {/* {model && <div className="bg-red-400 absolute h-screen w-full top-12 ">
-        <button onClick={handlemodel} className="absolute top-10 right-5 bg-gray-400 p-2 rounded-full w-10 h-10">
-          X
-        </button>
-        <h1 className="text-lg text-center  ">Variation_Options Form </h1>
-       
-        {formData.variation_options.map((option, index) => (
-
-          <div key={index}>
-            <div className={styles.containerdiv}>
-
-              <label className={styles.containerdivright}>
-                title:
-                <input className={styles.containerdivinput}
-                  type="text"
-                  name="title"
-                  value={option.title}
-                  onChange={(e) => { handleVariationOptionChange(index, e) }}
-                />
-              </label>
-              <label className={styles.containerdivright}>
-                price:
-                <input className={styles.containerdivinput}
-                  type="number"
-                  name="price"
-                  value={option.price}
-                  onChange={(e) => { handleVariationOptionChange(index, e) }}
-                />
-              </label>
-              <label className={styles.containerdivright}>
-                sale_price:
-                <input className={styles.containerdivinput}
-                  type="text"
-                  name="sale_price"
-                  value={option.sale_price}
-                  onChange={(e) => { handleVariationOptionChange(index, e) }}
-                />
-              </label>
-            </div>
-            <div className={styles.containerdiv}>
-
-              <label className={styles.containerdivright}>
-                quantity:
-                <input className={styles.containerdivinput}
-                  type="text"
-                  name="quantity"
-                  value={option.quantity}
-                  onChange={(e) => { handleVariationOptionChange(index, e) }}
-                />
-              </label>
-
-              <label className={styles.containerdivright}>
-                is_disable:
-                <input className={styles.containerdivinput}
-                  type="number"
-                  name="is_disable"
-                  value={option.is_disable}
-                  onChange={(e) => { handleVariationOptionChange(index, e) }}
-                />
-              </label>
-              <label className={styles.containerdivright}>
-                sku:
-                <input className={styles.containerdivinput}
-                  type="number"
-                  name="sku"
-                  value={option.sku}
-                  onChange={(e) => { handleVariationOptionChange(index, e) }}
-                />
-              </label>
-              <label className={styles.containerdivright}>
-                <Select
-                  isMulti={true}
-                  value={option.name}
-                  // onChange={handleSelectoption}
-                  onChange={(selectedOption) => handleSelectoption(selectedOption, index)}
-                  placeholder=" Select Options"
-                  options={tags}
-
-                />
-              </label>
-            </div>
-
-            <div className={styles.containerdiv}>
-              <button onClick={handleAddVariationOption} className="w-1/6 ml-10 bg-gray-300 ">Add More</button>
-            </div>
-
-            <div>
-              <button onClick={()=>handleRemoveVariationOption(index)} className="w-1/6 ml-10 bg-gray-300 ">Remove</button>
-            </div>
-
-          </div>
-        ))}
-      </div>
-      } */}
-
-
-
+  
     </main>
   );
 }
