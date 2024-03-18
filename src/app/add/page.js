@@ -8,6 +8,7 @@ import Select from 'react-select'
 import { options,tags,attributetab } from "../component/common/comman";
 import Input from "../component/Reuseable/input";
 import File from "../component/Reuseable/file";
+import Button from "../component/Reuseable/button";
 const AddUser = () => {
 
   const [view, setView] = useState(false)
@@ -760,8 +761,9 @@ const AddUser = () => {
               </div> */}
               <div className="flex w-full justify-around p-10">
 
-                <button onClick={handleAddVariation} className="w-1/6 ml-10 bg-gray-300 ">Add More</button>
-
+                {/* <button onClick={handleAddVariation} className="w-1/6 ml-10 bg-gray-300 ">Add More</button> */}
+                <Button onClick={handleAddVariation} styles={"w-1/6 ml-10 bg-gray-300"} text="Add More"/>
+                
                 <button onClick={() => removeFormFields(index)}
                   className={`w-1/6 p-2 ml-10 bg-gray-300 ${formData.variations.length > 1 ? 'bg-red-500 opacity-100 text-bold' : ' opacity-50 bg-red-500 cursor-not-allowed'}`}
                   disabled={formData.variations.length <= 1}
