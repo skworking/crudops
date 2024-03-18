@@ -6,8 +6,12 @@ import Image from 'next/image';
 import { FaFileAlt } from "react-icons/fa";
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import Editdetails from '../add/editdetails';
+import Link from 'next/link';
+
 const ImportFile = () => {
-    const [data, setData] = useState();
+ 
+    const [data, setData] = useState(JSON.parse(localStorage.getItem("data")));
+
     const [show,setShow]=useState(false);
     let parsedData;
     const handleFileChange = (event) => {
@@ -47,6 +51,7 @@ const ImportFile = () => {
                     return item;
                 });
                 setData(parsedData)
+                localStorage.setItem("data",JSON.stringify(parsedData))
             }
             reader.readAsArrayBuffer(file);
         }else{
@@ -56,29 +61,30 @@ const ImportFile = () => {
 
     useEffect(()=>{
       handleFileChange()
-    },[data])
+    },[])
+   
     const handleDelete=async(id)=>{
   
       let response = await fetch("http://localhost:3000/api/users/"+id,{
         method:"DELETE"
-      });
+      })
       response=await response.json();
       if(response.success){
         alert("Record Deleted Success-full")
         // router.push('/user-list',{scroll:false})
-        fetchData()
+        // fetchData()
+        
       }
     }
 
     const handleEdit=(data)=>{
       setData(data)
       setShow(!show)
-  
     }
     const handleCancel=(e)=>{
-      e.preventDefault();
         setShow(!show)
     }
+
     const handleUpdate=async(data,id)=>{
       let result=await fetch(`http://localhost:3000/api/users/${id}`,{
         method:"PUT",
@@ -92,12 +98,13 @@ const ImportFile = () => {
       if(result.success){
         alert("Record Updated Succes-full");
         setShow(!show)
+        redirect('/user-list')
       }
-      fetchData()
+      // fetchData()
     }
   return (
     <div className='flex-col p-2'>
-
+      <Link href={'/user-list'}>Go to List</Link>
       <h1 className='text-2xl text-center'>Read Excel file</h1>
       <div className='w-full  flex bg-gray-200 justify-around p-5 mt-5' >
         <div className='flex'>

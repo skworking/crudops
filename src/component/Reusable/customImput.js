@@ -1,6 +1,6 @@
 import React from 'react'
 
-const customImput = ({type,name,onChange,value,placeholder}) => {
+const customImput = ({type,name,change,value,placeholder}) => {
   return (
     <div>
       
@@ -8,7 +8,7 @@ const customImput = ({type,name,onChange,value,placeholder}) => {
           type={type}
           name={name}
           value={value}
-          onChange={onChange}
+          onChange={change}
           placeholder={placeholder}
         />
     

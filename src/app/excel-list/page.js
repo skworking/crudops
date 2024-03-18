@@ -22,6 +22,8 @@ const ExelList = () => {
 
         console.log(data);
         setData(data);
+     
+        
       } else if (file.name.endsWith('.xlsx')) {
         const workbook = XLSX.read(content, { type: 'binary' });
         const firstSheetName = workbook.SheetNames[0];

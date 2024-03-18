@@ -3,9 +3,11 @@ import { useState } from "react";
 import styles from "../page.module.css";
 import Image from "next/image";
 import { useRouter } from 'next/navigation'
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosCloseCircle } from "react-icons/io";
 import Select from 'react-select'
 import { options,tags,attributetab } from "../component/common/comman";
+import Input from "../component/Reuseable/input";
+import File from "../component/Reuseable/file";
 const AddUser = () => {
 
   const [view, setView] = useState(false)
@@ -73,7 +75,7 @@ const AddUser = () => {
   };
   // console.log("select",selectedOptions);
 
-  const handleHobbyImage = async(e) => {
+  const handleImage = async(e) => {
     e.preventDefault();
     const file = e.target.files[0];
     
@@ -438,7 +440,7 @@ const AddUser = () => {
       ]
     })
   }
-  console.log(formData);
+
   const handleAddVariationOption = (e) => {
     e.preventDefault()
     setFormData({
@@ -459,7 +461,6 @@ const AddUser = () => {
   };
 
   const removeFormFields = (index) => {
-    console.log(index);
     let newvariations;
     if (formData.variations.length > 1) {
       newvariations = formData.variations.filter((_, i) => i !== index)
@@ -486,9 +487,19 @@ const AddUser = () => {
 
     });
   };
-
+  const handkeImageRemove=(index)=>{
+      
+    let updated=[...formData.gallery]
+     updated.splice(index,1)
+     setFormData({
+         ...formData,
+         gallery:updated
+     })
+    
+   }
+ console.log(formData);
   return (
-    <main className={styles.main}>
+    <div className={styles.main}>
 
       <h5 className={styles.heading}>User Registration Form</h5>
 
@@ -496,7 +507,7 @@ const AddUser = () => {
 
         <div className={styles.containerdiv}>
 
-          <label className={styles.containerdivleft}>
+          {/* <label className={styles.containerdivleft}>
             Name:
             <input className={styles.containerdivinput}
               type="text"
@@ -504,9 +515,18 @@ const AddUser = () => {
               value={formData?.name}
               onChange={handleChange}
             />
-          </label>
-
-          <label className={styles.containerdivright}>
+          </label> */}
+        
+          <Input text={'name'} onChange={handleChange} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} />
+          <Input text={'slug'} onChange={handleChange} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} />
+          <Input text={'description'} onChange={handleChange} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} val={formData.description }/>
+          <Input text={'quantity'} onChange={handleNumberChange} typeinput="tel" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} val={formData.quantity }/>
+          <Input text={'price'} onChange={handleChange} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} />
+          <Input text={'sale_price'} onChange={handleChange} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} />
+          <Input text={'brand'} onChange={handleChange} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} />
+          <Input text={'weight'} onChange={handleChange} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} />
+           
+           {/* <div className={styles.containerdivright}>
             slug:
             <input className={styles.containerdivinput}
               type="text"
@@ -514,7 +534,8 @@ const AddUser = () => {
               value={formData.slug}
               onChange={handleChange}
             />
-          </label>
+          </div>
+
           <label className={styles.containerdivleft}>
             description:
             <input className={styles.containerdivinput}
@@ -533,7 +554,7 @@ const AddUser = () => {
               value={formData.quantity }
               onChange={handleNumberChange}
             />
-          </label>
+          </label> 
           <label className={styles.containerdivright}>
             price:
             <input className={styles.containerdivinput}
@@ -542,7 +563,7 @@ const AddUser = () => {
               value={formData.price}
               onChange={handleChange}
             />
-          </label>
+          </label> 
           <label className={styles.containerdivright}>
             sale_price:
             <input className={styles.containerdivinput}
@@ -569,26 +590,30 @@ const AddUser = () => {
               value={formData.weight}
               onChange={handleChange}
             />
-          </label>
-          <label className={styles.containerdivright}>
+          </label>*/}
+          <File  text={'Image'} onChange={handleImage} typeinput="file" option={false} stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} image={formData.image.original} />
+          {/* <label className={styles.containerdivright}>
            
            <input className={styles.containerdivinput}
              type="file"
              accept=".png,.jpg"
              name="image"
-             onChange={handleHobbyImage}
+             onChange={handleImage}
            />
           
-           <div className="flex p-2 gap-2 ">
+          <div className="flex p-2 gap-2 ">
             <img src={formData.image.original ? `http://localhost:3000/Images/`+formData?.image?.original:''}  width={100} height={100} />
-             {/* {formData.image !== '' &&
+             {formData.image !== '' &&
 
                <Image src={formData?.image?.original} width={100} height={100} />
-             } */}
-           </div>
+             }
+          </div>
 
-         </label>
-         <label className={styles.containerdivright}>
+         </label> */}
+         <Input text={'product_type'} onChange={handleChange} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} />
+         <Input text={'min_price'} onChange={handleNumberChange} typeinput="number" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} value={formData.min_price} />
+         <Input text={'max_price'} onChange={handleNumberChange} typeinput="number" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} value={formData.max_price} />
+         {/* <label className={styles.containerdivright}>
             product_type:
             <input className={styles.containerdivinput}
               type="text"
@@ -596,7 +621,7 @@ const AddUser = () => {
               value={formData.product_type}
               onChange={handleChange}
             />
-          </label>
+          </label> 
           <label className={styles.containerdivright}>
             min_price:
             <input className={styles.containerdivinput}
@@ -614,10 +639,9 @@ const AddUser = () => {
               value={formData.max_price}
               onChange={handleNumberChange}
             />
-          </label>
-
-          
-          <label className={styles.containerdivright}>
+          </label>*/}
+         <File  text={'gallery'} onChange={handleGalleryImage} typeinput="file" option={true} stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} images={formData.gallery.length} gallery={formData.gallery} onClick={handkeImageRemove} />
+          {/* <div className={styles.containerdivright}>
             Select Multiple Image Gallery:
             <input className={styles.containerdivinput}
               // id="fileInput"
@@ -630,21 +654,29 @@ const AddUser = () => {
             <div className="flex p-2 gap-2  ">
 
               {formData.gallery.length > 0 &&
-                formData.gallery.map((item) => {
+                formData.gallery.map((item,index) => {
                   console.log(item);
                   return (
-                    <div key={item._id} className="w-[100px] border-2 flex text-center flex-wrap">
-                  <img src={item?.original ? `http://localhost:3000/Images/`+item?.original:''}  width={100} height={100} />
-                      {/* <Image src={item?.original} className="  object-contain" width={200} height={100} /> */}
+                    <>
+                    <div key={item._id}  className="w-[100px]  flex flex-col justify-between text-center flex-wrap">
+                     <img src={item?.original ? `http://localhost:3000/Images/`+item?.original:''}  width={100} height={100} />
+                      
+                      <IoIosCloseCircle  
+                            className='cursor-pointer m-3 hover:fill-gray-500'
+                            onClick={()=>{handkeImageRemove(index)}}/>
                     </div>
+                  </>
                   )
                 })
 
               }
             </div>
 
-          </label>
-          <section className={styles.containerdivright}>
+          </div> */}
+       
+
+ 
+          <div className={`${styles.containerdivright} xl:grow flex flex-col  mt-10 text-lg lg:px-20  `}>
 
           <Select
             isMulti={true}
@@ -654,8 +686,8 @@ const AddUser = () => {
             options={options}
 
           />
-          </section>
-          
+          </div>
+
 
         </div>
 
@@ -665,15 +697,28 @@ const AddUser = () => {
             <form className="mt-10" key={index}>
               <h1 className="text-lg text-center text-black ">Variations Form </h1>
               <div className={styles.containerdiv}>
-                <label className={styles.containerdivright}>
+              <Input text={'attribute_id'} onChange={(e) => { handleVariationNumberChange(e, index) }} typeinput="tel" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} val={option?.attribute_id} />
+              <Input text={'value'} onChange={(e) => { handleVariationChange(e, index) }} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput} val={option?.value} />
+              <Input text={'slug'} onChange={(e) => { handleVariationAttributeChange(e, index) }} typeinput="text" stylediv={styles.containerdivright} inputstyle={styles.containerdivinput}  />
+              <Input text={'name'} onChange={(e) => { handleVariationAttributeChange(e, index) }} typeinput="text" stylediv={styles.containerdivright} inputstyle={`${styles.containerdivinput} `} />
+              <div className={`${styles.containerdivright} xl:grow flex flex-col  mt-10 text-lg lg:px-20 `}>
+              <Select
+                    isMulti={true}
+                    value={option?.attribute?.values?.name}
+                    onChange={(selectedOptions) => handleSelectAttribute(selectedOptions, index)}
+                    placeholder="Selected Attribute"
+                    options={attributetab}
+                    />
+              </div>
+                {/* <label className={styles.containerdivright}>
                   attribute_id:
                   <input className={styles.containerdivinput}
-                    type="text"
+                    type="number"
                     name="attribute_id"
                     value={option?.attribute_id}
                     onChange={(e) => { handleVariationNumberChange(e, index) }}
                   />
-                </label>
+                </label> 
                 <label className={styles.containerdivright}>
                   value:
                   <input className={styles.containerdivinput}
@@ -691,9 +736,9 @@ const AddUser = () => {
                     value={option?.attribute?.slug}
                     onChange={(e) => { handleVariationAttributeChange(e, index) }}
                   />
-                </label>
+                </label>*/}
               </div>
-              <div className={styles.containerdiv}>
+              {/* <div className={styles.containerdiv}>
                 <label className={styles.containerdivright}>
                   name:
                   <input className={styles.containerdivinput}
@@ -712,7 +757,7 @@ const AddUser = () => {
                     options={attributetab}
                   />
                 </label>
-              </div>
+              </div> */}
               <div className="flex w-full justify-around p-10">
 
                 <button onClick={handleAddVariation} className="w-1/6 ml-10 bg-gray-300 ">Add More</button>
@@ -828,7 +873,7 @@ const AddUser = () => {
 
       </form>
   
-    </main>
+    </div>
   );
 }
 
