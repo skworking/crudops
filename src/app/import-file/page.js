@@ -2,18 +2,28 @@
 import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx';
 import styles from '../page.module.css'
-import Image from 'next/image';
+
 import { FaFileAlt } from "react-icons/fa";
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import Editdetails from '../add/editdetails';
 import Link from 'next/link';
+import { data } from 'autoprefixer';
+
+
 
 const ImportFile = () => {
- 
-    const [data, setData] = useState(JSON.parse(localStorage.getItem("data")));
+
+    const [dataset, setData] = useState(JSON.parse(window?.localStorage?.getItem('data')));
 
     const [show,setShow]=useState(false);
     let parsedData;
+
+    const get=() => {
+      const dataFromLocalStorage = localStorage.getItem('data');
+      if (dataFromLocalStorage) {
+        setData(JSON.parse(dataFromLocalStorage));
+      }
+    }
     const handleFileChange = (event) => {
       // event.preventDefault();
         const file = event?.target?.files[0];
@@ -32,7 +42,7 @@ const ImportFile = () => {
                   // })
                    parsedData = jsonData?.map(item => {
                  
-                  item.image = JSON.parse(item.image);
+                  item.image = JSON.parse(item?.image);
                     
                     if(item.gallery){
                       item.gallery=JSON.parse(item.gallery);
@@ -51,13 +61,15 @@ const ImportFile = () => {
                     return item;
                 });
                 setData(parsedData)
-                localStorage.setItem("data",JSON.stringify(parsedData))
+                localStorage.setItem("data",JSON.stringify(dataset))
             }
             reader.readAsArrayBuffer(file);
         }else{
           console.log("dd");
         }
     }   
+
+    
 
     useEffect(()=>{
       handleFileChange()
@@ -80,9 +92,11 @@ const ImportFile = () => {
     const handleEdit=(data)=>{
       setData(data)
       setShow(!show)
+    
     }
     const handleCancel=(e)=>{
         setShow(!show)
+        get()
     }
 
     const handleUpdate=async(data,id)=>{
@@ -98,7 +112,7 @@ const ImportFile = () => {
       if(result.success){
         alert("Record Updated Succes-full");
         setShow(!show)
-        redirect('/user-list')
+        
       }
       // fetchData()
     }
@@ -106,16 +120,16 @@ const ImportFile = () => {
     <div className='flex-col p-2'>
       <Link href={'/user-list'}>Go to List</Link>
       <h1 className='text-2xl text-center'>Read Excel file</h1>
-      <div className='w-full  flex bg-gray-200 justify-around p-5 mt-5' >
-        <div className='flex'>
+      <div className='w-full  flex bg-gray-200  p-5 mt-5' >
+        <div className='flex justify-start'>
 
-        <h1 className='text-xl '>Upload File</h1>
+        <h1 className='text-xl  '>Upload File</h1>
         <FaFileAlt className='w-fit text-3xl cursor-pointer hover:fill-slate-400' onClick={() => document.getElementById('filePicker').click()}/>
         </div>
         <input type='file' id="filePicker" accept='.csv, .xlsx' style={{ display: 'none' }} onChange={handleFileChange} />
-        {data?.length > 0 &&
+        {/* {data?.length > 0 &&
         <button className='bg-gray-300 p-2 rounded hover:bg-gray-400'>Save</button>
-        }
+        } */}
       </div>
       <table className="w-full bg-white shadow-md rounded-lg ">
         <thead className="bg-gray-200 text-gray-700 flex-1">
@@ -128,9 +142,9 @@ const ImportFile = () => {
             <th className="py-2 px-4 ">Operation</th>
           </tr>
         </thead>
+          
         <tbody className="text-gray-600 text-center ">
-
-          {data?.length>0 ? data?.map(user => (
+          {dataset?.length>0 && dataset?.map(user => (
             <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-100 ">
               <td className="py-2 px-4">{user.name}</td>
               <td className="py-2 px-4">{user.slug}</td>
@@ -163,16 +177,16 @@ const ImportFile = () => {
               </td>
             </tr>
             
-          )):
-          "Data not Found"
+          ))
           }
         </tbody>
       </table>
       {show && 
+
           <div className='absolute top-0 h-auto w-full p-20 bg-gray-400 opacity-80 text-center'>
-            <IoCloseCircleOutline className=' float-right  hover:bg-white bg-gray-400 w-[30px] h-[30px] text-center  p-1 rounded-full cursor-pointer' onClick={()=>{setShow(!show)}} />
+            <IoCloseCircleOutline className=' float-right  hover:bg-white bg-gray-400 w-[30px] h-[30px] text-center  p-1 rounded-full cursor-pointer' onClick={handleCancel} />
               
-            <Editdetails data={data} oncancel={handleCancel} onUpdate={handleUpdate}/>
+            <Editdetails data={dataset} oncancel={handleCancel} onUpdate={handleUpdate}/>
            
           </div>
           }

@@ -18,6 +18,7 @@ export async function GET(){
 }
 
 
+
 export async function POST(request){
     await mongoose.connect(con)
     const payload=await request.json();
