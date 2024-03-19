@@ -41,11 +41,21 @@ export async function GET(content){
     return NextResponse.json({result,success:true})
 }
 
-export async function DELETE({params}){
-    const userId=params.userid;
+// export async function DELETE({params}){
+//     const userId=params.userid;
+//     console.log(userId);
+//     const record={_id:userId}
+//     console.log(record,userId);
+//     // check the connection
+//     await mongoose.connect(con)
 
-    const record={_id:userId}
-    console.log(record,userId);
+//     const result=await User.deleteOne(record);
+//     return NextResponse.json({result,massage:"Rocord deleted",success:true})
+// }
+
+export async function DELETE({params}){
+    const record={_id:params.userid}
+    console.log(record);
     // check the connection
     await mongoose.connect(con)
 

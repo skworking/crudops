@@ -39,7 +39,7 @@ const DisplayUser = () => {
   }, []);
 
   const handleDelete=async(id)=>{
-  
+    console.log(id);
     let response = await fetch("http://localhost:3000/api/users/"+id,{
       method:"DELETE"
     });
