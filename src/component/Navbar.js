@@ -10,20 +10,20 @@ const NavList=()=>{
         <>
             <ul className='flex gap-2' >
             <li className='hover:bg-white p-2 rounded'>
-                <Link href={'/add'}>Add USer</Link>
+                <Link href={'/add'} className='p-2'>Add USer</Link>
             </li>
             <li className='hover:bg-white p-2 rounded'>
-                <Link href={'/user-list'}>
+                <Link href={'/user-list'} className='p-2'>
                     Display USer
                 </Link>
             </li>
             <li className='hover:bg-white p-2 rounded'>
-                <Link href={'/excel-list'}>
+                <Link href={'/excel-list'} className='p-2'>
                     Exel-CSV
                 </Link>
             </li>
             <li className='hover:bg-white p-2 rounded'>
-                <Link href={'/import-file'}>
+                <Link href={'/import-file'} className='p-2'>
                     Upload EXCEL
                 </Link>
             </li>
