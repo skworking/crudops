@@ -3,7 +3,8 @@ import styles from "../page.module.css";
 import Image from 'next/image';
 import { IoIosCloseCircle } from 'react-icons/io';
 import Select from 'react-select'
-import { options,tags, attributetab } from '../component/common/comman';
+import { options,tags, attributetab, handleChange } from '../component/common/comman';
+
 const Editdetails = (props) => {
     const {data,oncancel,onUpdate}=props;
     const [formData, setFormData] = useState({
@@ -69,23 +70,23 @@ const Editdetails = (props) => {
       },[data?.tag,formData.variation_options,formData.variations])
   
 
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-          ...prevState,
-          [name]: value
-        }));
-      };
+      // const handleChange = (e) => {
+      //   const { name, value } = e.target;
+      //   setFormData(prevState => ({
+      //     ...prevState,
+      //     [name]: value
+      //   }));
+      // };
 
-      const handleNumberChange = (e) => {
-        const { name, value } = e.target;
-        const newValue = !isNaN(value) && value !== '' ? parseFloat(value) : 0;
-        // const parsedValue = parseFloat(value); // Parse value to number
-        setFormData(prevState => ({
-          ...prevState,
-          [name]: newValue // Store parsed value
-        }));
-      };
+      // const handleNumberChange = (e) => {
+      //   const { name, value } = e.target;
+      //   const newValue = !isNaN(value) && value !== '' ? parseFloat(value) : 0;
+      //   // const parsedValue = parseFloat(value); // Parse value to number
+      //   setFormData(prevState => ({
+      //     ...prevState,
+      //     [name]: newValue // Store parsed value
+      //   }));
+      // };
 
       const handleImage = async(e) => {
         e.preventDefault();
@@ -115,57 +116,7 @@ const Editdetails = (props) => {
           console.log(err);
         }
       }
-      // const handleImage = (e) => {
-      //   e.preventDefault();
-      //   const file = e.target.files[0];
-      //   console.log("file", file);
-      //   // Create a new FileReader instance
-      //   const reader = new FileReader();
       
-      //   reader.onload = () => {
-      //     setFormData(prevState => ({
-      //       ...prevState,
-    
-      //       image: {
-      //         ...prevState.image,
-      //         thumbnail: reader.result,
-      //         original: reader.result
-      //       }
-    
-      //     }));
-    
-      //   }
-      //   // Read the file as a data URL
-      //   reader.readAsDataURL(file);
-      // }
-
-      // const handleGalleryImage = (e) => {
-
-      //   const files = e.target.files;
-    
-      //   for (let i = 0; i < files.length; i++) {
-      //     const file = files[i];
-      //     const reader = new FileReader();
-    
-      //     reader.onload = () => {
-      //       // Update formData with the new image
-      //       setFormData(prevState => ({
-      //         ...prevState,
-      //         gallery: [
-      //           ...prevState.gallery,
-      //           {
-      //             thumbnail: reader.result,
-      //             original: reader.result
-      //           }
-      //         ]
-      //       }));
-      //     };
-    
-      //     // Read the file as a data URL
-      //     reader.readAsDataURL(file);
-      //   }
-    
-      // }
       console.log(formData);
       const handleGalleryImage = async (e) => {
         e.preventDefault();
@@ -201,7 +152,7 @@ const Editdetails = (props) => {
             ]
         }));
       };
-      const handkeImageRemove=(index)=>{
+      const handleImageRemove=(index)=>{
       
        let updated=[...formData.gallery]
         updated.splice(index,1)
@@ -468,14 +419,14 @@ const Editdetails = (props) => {
         <div className=''>
          
          <div className={styles.containerdiv}>
-            
+        
           <label className={styles.containerdivleft}>
             Name:
             <input className={styles.containerdivinput}
               type="text"
               name="name"
               value={formData?.name}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivright}>
@@ -484,7 +435,7 @@ const Editdetails = (props) => {
               type="text"
               name="slug"
               value={formData.slug}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivleft}>
@@ -493,7 +444,7 @@ const Editdetails = (props) => {
               type="text"
               name="description"
               value={formData.description}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivright}>
@@ -502,7 +453,7 @@ const Editdetails = (props) => {
               type="tel"
               name="quantity"
               value={formData.quantity}
-              onChange={handleNumberChange}
+              onChange={(e) => handleNumberChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivright}>
@@ -511,7 +462,7 @@ const Editdetails = (props) => {
               type="text"
               name="price"
               value={formData.price}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivright}>
@@ -520,7 +471,7 @@ const Editdetails = (props) => {
               type="text"
               name="sale_price"
               value={formData.sale_price}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivright}>
@@ -529,7 +480,7 @@ const Editdetails = (props) => {
               type="text"
               name="brand"
               value={formData.brand}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivright}>
@@ -538,7 +489,7 @@ const Editdetails = (props) => {
               type="text"
               name="weight"
               value={formData.weight}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, setFormData)}
             />
           </label>
           <section className={styles.containerdivright}>
@@ -566,7 +517,7 @@ const Editdetails = (props) => {
               type="text"
               name="product_type"
               value={formData.product_type}
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivright}>
@@ -575,7 +526,7 @@ const Editdetails = (props) => {
               type="text"
               name="min_price"
               value={formData.min_price}
-              onChange={handleNumberChange}
+              onChange={(e) => handleNumberChange(e, setFormData)}
             />
           </label>
           <label className={styles.containerdivright}>
@@ -584,7 +535,7 @@ const Editdetails = (props) => {
               type="number"
               name="max_price"
               value={formData.max_price}
-              onChange={handleNumberChange}
+              onChange={(e) => handleNumberChange(e, setFormData)}
             />
           </label>
             <div className={`${styles.containerdivright} flex  flex-col`}>
@@ -609,7 +560,7 @@ const Editdetails = (props) => {
                         {/* <Image src={item?.original} className="  object-contain" width={200} height={100} /> */}
                         <IoIosCloseCircle  
                             className='cursor-pointer m-3 hover:fill-white'
-                            onClick={()=>{handkeImageRemove(index)}}/>
+                            onClick={()=>{handleImageRemove(index)}}/>
                         
                         </div>
 

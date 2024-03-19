@@ -12,32 +12,36 @@ import { data } from 'autoprefixer';
 
 
 
+
 const ImportFile = () => {
-
-    const [dataset, setData] = useState(JSON.parse(window?.localStorage?.getItem('data')));
-
+    
+    const [dataset, setData] = useState(JSON.parse(window?.sessionStorage?.getItem('data')));
+    const [filename,setFileName]=useState(sessionStorage?.getItem('filename'))
     const [show,setShow]=useState(false);
+
     let parsedData;
 
     const get=() => {
-      const dataFromLocalStorage = localStorage.getItem('data');
-      if (dataFromLocalStorage) {
-        setData(JSON.parse(dataFromLocalStorage));
+      const dataFromsessionStorage = sessionStorage.getItem('data');
+      if (dataFromsessionStorage) {
+        setData(JSON.parse(dataFromsessionStorage));
       }
     }
     const handleFileChange = (event) => {
+      console.log("call again");
       // event.preventDefault();
         const file = event?.target?.files[0];
-
         // if (!file) return;
         if(file){
 
             const reader = new FileReader();
             reader.onload = (e) => {
                 const data = new Uint8Array(e.target.result);
+              
                 const workbook = XLSX.read(data, { type: 'array' });
                 const worksheet = workbook.Sheets[workbook.SheetNames[0]];
                 const jsonData = XLSX.utils.sheet_to_json(worksheet);
+             
                   // jsonData.map((item)=>{
                   //   console.log(JSON.parse(item.image));
                   // })
@@ -62,7 +66,9 @@ const ImportFile = () => {
                     return item;
                 });
                 setData(parsedData)
-                localStorage.setItem("data",JSON.stringify(dataset))
+               
+                sessionStorage.setItem("data",JSON.stringify(parsedData))
+                sessionStorage.setItem("filename",file.name)
             }
             reader.readAsArrayBuffer(file);
         }else{
@@ -72,9 +78,6 @@ const ImportFile = () => {
 
     
 
-    useEffect(()=>{
-      handleFileChange()
-    },[])
    
     const handleDelete=async(id)=>{
   
@@ -82,11 +85,14 @@ const ImportFile = () => {
         method:"DELETE"
       })
       response=await response.json();
-      if(response.success){
-        alert("Record Deleted Success-full")
-        // router.push('/user-list',{scroll:false})
-        // fetchData()
+      if(response.success === true){
+        const updatedDataset = dataset.filter(item => item._id !== id);
+        sessionStorage.setItem('data', JSON.stringify(updatedDataset));
+        setData(updatedDataset);
+         alert("Record Deleted Success-fully")
         
+      }else{
+        alert("Failed to delete record");
       }
     }
 
@@ -109,7 +115,7 @@ const ImportFile = () => {
         body:JSON.stringify(data)
       })
       result=await result.json();
-  
+
       if(result.success){
         alert("Record Updated Succes-full");
         setShow(!show)
@@ -120,7 +126,7 @@ const ImportFile = () => {
   return (
     <div className='flex-col p-2'>
       <Link href={'/user-list'}>Go to List</Link>
-      <h1 className='text-2xl text-center'>Read Excel file</h1>
+      <h1 className='text-2xl text-center'>Read Excel: {filename}</h1>
       <div className='w-full  flex bg-gray-200  p-5 mt-5' >
         <div className='flex justify-start'>
 
@@ -172,8 +178,8 @@ const ImportFile = () => {
                 }
               </td> */}
               <td className={`py-2 px-4 sm:flex-1  ${styles.wrap} `}>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={()=>handleEdit(user)}>Edit</button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded " onClick={()=>{handleDelete(user._id)}}>Delete</button>
+                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded  mr-2" onClick={()=>{handleDelete(user._id)}}>Delete</button>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={()=>handleEdit(user)}>Edit</button>
                 
               </td>
             </tr>

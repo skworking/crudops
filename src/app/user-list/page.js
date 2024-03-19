@@ -148,7 +148,7 @@ const DisplayUser = () => {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
     });
     
-    saveAs(blob, "exportedData.xlsx");
+    saveAs(blob, "users.xlsx");
   };
 
   return (
