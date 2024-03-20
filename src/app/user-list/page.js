@@ -78,6 +78,7 @@ const DisplayUser = () => {
     fetchData()
   }
   const [loading,setLoading]=useState(true);
+
   useEffect(()=>{
     setTimeout(()=>{
       setLoading(false)
@@ -90,14 +91,16 @@ const DisplayUser = () => {
     setSearch(search)
   }
   const searching=async()=>{
-    let result=await fetch(`http://localhost:3000/api/users/?name=${search}`)
+    let result=await fetch(`http://localhost:3000/api/users/search?name=${search}`)
     const data = await result.json();
-  
+    setUsers(data.result);
   }
   const searchCall=()=>{
    
    if(search.length >0){
     searching()
+   }else{
+    fetchData()
    }
   }
 

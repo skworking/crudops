@@ -6,16 +6,13 @@ import { con } from "@/lib/db";
 
 
 export async function PUT(request,{params}){
-    // console.log(content);
-    // get id
     const userId=params.userid;
     console.log(userId);
     // id object create
     const filter={_id:userId}
     // get data json from user
     const payload=await request.json();
-    // console.log(payload);
-    // check the connection
+  
     await mongoose.connect(con)
 
     const result=await User.findOneAndUpdate(filter,payload,{ new: true });
@@ -23,17 +20,13 @@ export async function PUT(request,{params}){
 
 }
 // search by id
-export async function GET(content){
+export async function GET(request,{params}){
     
-  
-    console.log(content);
-    // get id
-    const userId=content.params.userid;
+    const userId=params.userid;
+ 
     console.log(userId);
     // id object create
     const record={_id:userId}
- 
-   
     // check the connection
     await mongoose.connect(con)
 
