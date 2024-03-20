@@ -18,7 +18,7 @@ export async function PUT(request,{params}){
     // check the connection
     await mongoose.connect(con)
 
-    const result=await User.findOneAndUpdate(filter,payload);
+    const result=await User.findOneAndUpdate(filter,payload,{ new: true });
     return NextResponse.json({result,success:true})
 
 }
