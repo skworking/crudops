@@ -10,6 +10,8 @@ import EditUser from '../component/edituser/page';
 import Editdetails from '../add/editdetails';
 import * as XLSX from 'xlsx';
 import { saveAs } from "file-saver";
+import {  toast } from 'react-toastify';
+
 
 const DisplayUser = () => {
   const [users, setUsers] = useState([]);
@@ -45,7 +47,8 @@ const DisplayUser = () => {
     });
     response=await response.json();
     if(response.success){
-      alert("Record Deleted Success-full")
+
+      toast.success('Delete successful!');
       // router.push('/user-list',{scroll:false})
       fetchData()
     }
@@ -72,7 +75,7 @@ const DisplayUser = () => {
     result=await result.json();
 
     if(result.success){
-      alert("Record Updated Succes-full");
+      toast.success('Update successful!');
       setShow(!show)
     }
     fetchData()
@@ -93,6 +96,11 @@ const DisplayUser = () => {
   const searching=async()=>{
     let result=await fetch(`http://localhost:3000/api/users/search?name=${search}`)
     const data = await result.json();
+    console.log(data);
+    if(data.result.length > 0 )
+    toast.success('Search successful!');
+    else
+    toast.warning("somting went wrong")
     setUsers(data.result);
   }
   const searchCall=()=>{
@@ -156,6 +164,8 @@ const DisplayUser = () => {
 
   return (
     <div className='overflow-x-auto  items-center'>
+    
+     
      {loading ? <div className='w-full  text-center m-auto'>Loading Data</div>
      :
      <>

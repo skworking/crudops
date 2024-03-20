@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import styles from '../page.module.css'
 import Image from 'next/image';
 import { FaFileAlt } from "react-icons/fa";
+import { toast } from 'react-toastify';
 const ExelList = () => {
   const [Data, setData] = useState([]);
 
@@ -31,7 +32,7 @@ const ExelList = () => {
         data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
         setData(data);
       } else {
-        alert('unsupported file format. please upload  a csv and xlsx file.')
+        toast('unsupported file format. please upload  a csv and xlsx file.')
       }
     };
     reader.readAsBinaryString(file);

@@ -7,6 +7,7 @@ import { FaFileAlt } from "react-icons/fa";
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import Editdetails from '../add/editdetails';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 
 
@@ -88,10 +89,10 @@ const ImportFile = () => {
             const updatedDataset = dataset.filter(item => item._id !== id);
             sessionStorage.setItem('data', JSON.stringify(updatedDataset));
             setData(updatedDataset);
-            alert("Record Deleted Success-fully")
+            toast("Record Deleted Success-fully")
 
         } else {
-            alert("Failed to delete record");
+            toast("Failed to delete record");
         }
     }
 
@@ -117,7 +118,7 @@ const ImportFile = () => {
 
 
         if (result.success) {
-            alert("Record Updated Succes-full");
+            toast("Record Updated Succes-full");
             setShow(!show)
 
         }

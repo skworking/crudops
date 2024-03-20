@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 
 export const options = [
     { value: 'chocolate', label: 'Chocolate' },
@@ -49,7 +50,7 @@ export const handleSubmit = async (e,formData,router) => {
     });
     result = await result.json();
     if (result.success) {
-      alert("data inserted successfully");
+      toast.success('Record Add successful!');
       router.push('/user-list');
 
     }
